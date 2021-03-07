@@ -8,7 +8,7 @@ import {
   Platform,
   Image,
 } from "react-native";
-import Colors from "../../helpers/Colors";
+import Colors from "../helpers/Colors";
 const ListProductItem = (props) => {
   const TitleButton =
     Platform.OS === "ios" ? TouchableOpacity : TouchableNativeFeedback;
@@ -75,6 +75,7 @@ const styles = StyleSheet.create({
   title: {
     fontSize: 18,
     marginVertical: 2,
+    fontFamily: "merri-bold",
   },
 
   price: { fontSize: 17, color: "#888" },

@@ -18,6 +18,12 @@ export const MainStackNavigation = () => {
           headerStyle: {
             backgroundColor: Colors.primary,
           },
+          headerTitleStyle: {
+            fontFamily: "merri-bold",
+          },
+          headerBackTitleStyle: {
+            fontFamily: "merri-regular",
+          },
         })}
       />
       <Stack.Screen
@@ -26,6 +32,12 @@ export const MainStackNavigation = () => {
         options={({ route, navigation }) => ({
           headerTitle: route.params.title,
           headerTintColor: "white",
+          headerTitleStyle: {
+            fontFamily: "merri-bold",
+          },
+          headerBackTitleStyle: {
+            fontFamily: "merri-regular",
+          },
           headerStyle: {
             backgroundColor: Colors.primary,
           },

@@ -1,10 +1,21 @@
 import React from "react";
 import { View, Text, FlatList, StyleSheet } from "react-native";
-import { useSelector } from "react-redux";
-import ListProductItem from "../components/shop/ListProductItem";
+import { useSelector, useDispatch } from "react-redux";
+import ListProductItem from "../components/ListProductItem";
+import { addItemToCart } from "../store/actions/cart";
+import {
+  HeaderButton,
+  HeaderButtons,
+  Item,
+} from "react-navigation-header-buttons";
 
 const ProductAllViewScreen = (props) => {
   const products = useSelector((state) => state.product.Allproducts);
+  const dispatch = useDispatch();
+
+  React.useLayoutEffect(() => {
+    props.navigation.set
+  }, [props.navigation]);
 
   return (
     <View>
@@ -24,7 +35,7 @@ const ProductAllViewScreen = (props) => {
                 title: itemData.item.title,
               });
             }}
-            toCart={() => {}}
+            toCart={() => dispatch(addItemToCart(itemData.item))}
           />
         )}
       />
