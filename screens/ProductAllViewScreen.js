@@ -1,20 +1,29 @@
 import React from "react";
-import { View, Text, FlatList, StyleSheet } from "react-native";
+import { View, Text, FlatList, StyleSheet, Platform } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import ListProductItem from "../components/ListProductItem";
 import { addItemToCart } from "../store/actions/cart";
-import {
-  HeaderButton,
-  HeaderButtons,
-  Item,
-} from "react-navigation-header-buttons";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import HeaderButtonComp from "../components/UI/HeaderButton";
 
 const ProductAllViewScreen = (props) => {
   const products = useSelector((state) => state.product.Allproducts);
   const dispatch = useDispatch();
 
   React.useLayoutEffect(() => {
-    props.navigation.set
+    props.navigation.setOptions({
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButtonComp}>
+          <Item
+            title="cart"
+            iconName={Platform.OS === "ios" ? "cart-outline" : "md-cart"}
+            onPress={() =>
+              props.navigation.navigate("CartScreen", { title: "Cart" })
+            }
+          />
+        </HeaderButtons>
+      ),
+    });
   }, [props.navigation]);
 
   return (

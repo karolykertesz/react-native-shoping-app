@@ -10,6 +10,8 @@ import {
 } from "react-native";
 import Colors from "../helpers/Colors";
 import * as CartAction from "../store/actions/cart";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import HeaderButtonComp from "../components/UI/HeaderButton";
 
 const ProductDetailScreen = ({ route, navigation }) => {
   const { id } = route.params;
@@ -17,7 +19,19 @@ const ProductDetailScreen = ({ route, navigation }) => {
     state.product.Allproducts.find((it) => it.id === id)
   );
   const dispatch = useDispatch();
-
+  React.useLayoutEffect(() => {
+    navigation.setOptions({
+      headerRight: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButtonComp}>
+          <Item
+            title="cart"
+            iconName={Platform.OS === "ios" ? "cart-outline" : "md-cart"}
+            onPress={() => navigation.navigate("CartScreen", { title: "Cart" })}
+          />
+        </HeaderButtons>
+      ),
+    });
+  }, [navigation]);
   return (
     <ScrollView>
       <Image style={styles.image} source={{ uri: item.imageUrl }} />
