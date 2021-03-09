@@ -5,6 +5,7 @@ import ProductAllViewScreen from "../screens/ProductAllViewScreen";
 import ProductDetailScreen from "../screens/PruductDetailScreen";
 import CartScreen from "../screens/CartScreen";
 import Colors from "../helpers/Colors";
+import DrawerNavigator from "./DrawerNavigation";
 const Stack = createStackNavigator();
 
 export const MainStackNavigation = () => {
@@ -61,6 +62,7 @@ export const MainStackNavigation = () => {
           },
         })}
       />
+      <Stack.Screen component={DrawerNavigator} name="OrdersScreen" />
     </Stack.Navigator>
   );
 };
