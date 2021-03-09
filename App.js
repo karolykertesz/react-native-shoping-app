@@ -6,11 +6,16 @@ import { OverflowMenuProvider } from "react-navigation-header-buttons";
 import { createStore, combineReducers } from "redux";
 import { Provider } from "react-redux";
 import ProductReducer from "./store/reducers/products";
+import UserOrders from "./store/reducers/UserOrder";
 import Cart from "./store/reducers/cart";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 
-const reducers = combineReducers({ product: ProductReducer, cart: Cart });
+const reducers = combineReducers({
+  product: ProductReducer,
+  cart: Cart,
+  orders: UserOrders,
+});
 
 const store = createStore(reducers);
 const loadFont = () => {

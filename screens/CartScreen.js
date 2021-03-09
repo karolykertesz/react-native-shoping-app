@@ -7,42 +7,50 @@ import {
   Button,
   SafeAreaView,
 } from "react-native";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
 import CartItemIs from "../components/CartItemIs";
+import { removeItemFromCart } from "../store/actions/cart";
+import * as UserOrders from "../store/actions/userOrders";
 const CartScreen = (props) => {
+  const dispatch = useDispatch();
   const total = useSelector((state) => state.cart.sumItems);
   const cartItems = useSelector((state) => state.cart.items);
-  const cartIt = Object.values(cartItems).map((it) => ({
-    quantity: it.quantity,
-    total: it.total,
-    title: it.title,
-    key: Math.random(3) * 100,
-  }));
-  // console.log(cartIt);
+
+  const yy = Object.keys(cartItems)
+    .map((i) => ({
+      id: i,
+      quantity: cartItems[i].quantity,
+      title: cartItems[i].title,
+      price: cartItems[i].price,
+      key: Math.random(3) * 1000000,
+    }))
+    .sort((a, b) => (a.id > b.id ? 1 : -1));
 
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.screen}>
         <View style={styles.allTotal}>
-          <Text style={styles.textTotal}>Total: ${total.toFixed(2)}</Text>
-          <Text style={styles.textTotal}></Text>
+          <Text style={styles.textTotal}>
+            Total: ${total > 0 && total.toFixed(2)}
+          </Text>
           <Button
             title="Place Your Order!"
             color="#f50a2d"
-            disabled={cartIt.length === 0}
+            disabled={yy.length === 0}
+            onPress={() => dispatch(UserOrders.addUserOrder(cartItems, total))}
           />
         </View>
         <FlatList
-          data={cartIt}
+          data={yy}
           renderItem={(itemData) => (
             <CartItemIs
               qua={itemData.item.quantity}
               title={itemData.item.title}
-              total={itemData.item.total}
-              removeItem={() => {}}
+              total={itemData.item.price}
+              removeItem={() => dispatch(removeItemFromCart(itemData.item.id))}
             />
           )}
-          key={(item) => item.key}
+          keyExtractor={(item) => item.key.toString()}
         />
       </View>
     </SafeAreaView>

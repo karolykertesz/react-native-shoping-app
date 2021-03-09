@@ -13,10 +13,10 @@ const CartItemIs = ({ qua, total, title, removeItem }) => {
     <View style={styles.screen}>
       <View style={styles.itd}>
         <Text style={styles.qua}> {qua}</Text>
-        <Text style={styles.titleText}> {title}</Text>
+        <Text style={styles.titleText}>{title}</Text>
       </View>
       <View style={styles.itd}>
-        <Text style={styles.total}>${total}</Text>
+        <Text style={styles.total}>$ {total * qua}</Text>
         <TouchableOpacity onPress={() => removeItem()} style={styles.btnDelete}>
           <Ionicons
             size={23}

@@ -16,7 +16,7 @@ const ProductAllViewScreen = (props) => {
         <HeaderButtons HeaderButtonComponent={HeaderButtonComp}>
           <Item
             title="cart"
-            iconName={Platform.OS === "ios" ? "cart-outline" : "md-cart"}
+            iconName={Platform.OS === "ios" ? "cart" : "md-cart"}
             onPress={() =>
               props.navigation.navigate("CartScreen", { title: "Cart" })
             }
