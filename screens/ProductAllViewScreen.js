@@ -23,6 +23,15 @@ const ProductAllViewScreen = (props) => {
           />
         </HeaderButtons>
       ),
+      headerLeft: () => (
+        <HeaderButtons HeaderButtonComponent={HeaderButtonComp}>
+          <Item
+            title="cart"
+            iconName={Platform.OS === "ios" ? "menu-sharp" : "md-menu"}
+            onPress={() => props.navigation.toggleDrawer()}
+          />
+        </HeaderButtons>
+      ),
     });
   }, [props.navigation]);
 

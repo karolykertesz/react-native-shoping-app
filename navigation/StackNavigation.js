@@ -1,11 +1,14 @@
 import * as React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Platform } from "react-native";
+import { Platform, Button } from "react-native";
 import ProductAllViewScreen from "../screens/ProductAllViewScreen";
 import ProductDetailScreen from "../screens/PruductDetailScreen";
 import CartScreen from "../screens/CartScreen";
 import Colors from "../helpers/Colors";
+import { HeaderButtons, Item } from "react-navigation-header-buttons";
+import HeaderButton from "../components/UI/HeaderButton";
 import DrawerNavigator from "./DrawerNavigation";
+import OrdersScreen from "../screens/OrdersScreen";
 const Stack = createStackNavigator();
 
 export const MainStackNavigation = () => {
@@ -62,7 +65,38 @@ export const MainStackNavigation = () => {
           },
         })}
       />
-      <Stack.Screen component={DrawerNavigator} name="OrdersScreen" />
+    </Stack.Navigator>
+  );
+};
+
+export const OrdersNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        name="order"
+        component={OrdersScreen}
+        options={({ route, navigation }) => ({
+          headerTitle: "Your Orders",
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontFamily: "merri-bold",
+          },
+          headerBackTitleStyle: {
+            fontFamily: "merri-regular",
+            color: "white",
+          },
+          headerStyle: {
+            backgroundColor: Colors.primary,
+          },
+          headerLeft: () => (
+            <Button
+              title="Back Home"
+              color="white"
+              onPress={() => navigation.navigate("ProductAllViewScreen")}
+            />
+          ),
+        })}
+      />
     </Stack.Navigator>
   );
 };

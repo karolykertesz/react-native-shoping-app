@@ -30,6 +30,7 @@ const ProductDetailScreen = ({ route, navigation }) => {
           />
         </HeaderButtons>
       ),
+      
     });
   }, [navigation]);
   return (

@@ -15,7 +15,7 @@ const HeaderButtonComp = (props) => {
         IconComponent={Ionicons}
         iconSize={23}
         {...props}
-        color={lengOfItems > 0 ? "red" : "white"}
+        color="white"
       />
     </View>
   );

@@ -1,18 +1,19 @@
 import React from "react";
-import { View, Text,  SafeAreaView, FlatList } from "react-native";
+import { View, Text, SafeAreaView, FlatList } from "react-native";
 import { useSelector } from "react-redux";
 import OrderItems from "../components/OredrItems.jsx";
 
 const OrdersScreen = (props) => {
   const orders = useSelector((state) => state.orders.orders);
+
   return (
-    <SafeAreaView>
+    <View>
       <FlatList
         data={orders}
-        renderItem={(itemData) => <OrderItems />}
-        keyExtractor={(item) => item.id.toStirng()}
+        renderItem={(itemData) => <Text>{itemData.item.total}</Text>}
+        keyExtractor={(item) => item.id.toString()}
       />
-    </SafeAreaView>
+    </View>
   );
 };
 

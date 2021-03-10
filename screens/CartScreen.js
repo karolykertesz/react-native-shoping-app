@@ -14,8 +14,8 @@ import * as UserOrders from "../store/actions/userOrders";
 const CartScreen = (props) => {
   const dispatch = useDispatch();
   const total = useSelector((state) => state.cart.sumItems);
-  const cartItems = useSelector((state) => state.cart.items);
 
+  const cartItems = useSelector((state) => state.cart.items);
   const yy = Object.keys(cartItems)
     .map((i) => ({
       id: i,
@@ -31,13 +31,13 @@ const CartScreen = (props) => {
       <View style={styles.screen}>
         <View style={styles.allTotal}>
           <Text style={styles.textTotal}>
-            Total: ${total > 0 && total.toFixed(2)}
+            Total:${total > 0 ? total.toFixed(2) : 0}
           </Text>
           <Button
             title="Place Your Order!"
             color="#f50a2d"
             disabled={yy.length === 0}
-            onPress={() => dispatch(UserOrders.addUserOrder(cartItems, total))}
+            onPress={() => dispatch(UserOrders.addUserOrder(yy, total))}
           />
         </View>
         <FlatList

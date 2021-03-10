@@ -1,4 +1,4 @@
-class userOrders {
+class UserOrdersState {
   constructor(id, items, total, date) {
     this.id = id;
     this.items = items;
@@ -7,4 +7,4 @@ class userOrders {
   }
 }
 
-export default userOrders;
+export default UserOrdersState;

@@ -1,7 +1,7 @@
 import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
-import { MainStackNavigation } from "./navigation/StackNavigation";
+import DrawerNavigator from "./navigation/DrawerNavigation";
 import { OverflowMenuProvider } from "react-navigation-header-buttons";
 import { createStore, combineReducers } from "redux";
 import { Provider } from "react-redux";
@@ -10,6 +10,9 @@ import UserOrders from "./store/reducers/UserOrder";
 import Cart from "./store/reducers/cart";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
+import { LogBox } from "react-native";
+
+LogBox.ignoreLogs(["Require cycle:"]);
 
 const reducers = combineReducers({
   product: ProductReducer,
@@ -39,7 +42,7 @@ export default function App() {
     <NavigationContainer>
       <Provider store={store}>
         <OverflowMenuProvider>
-          <MainStackNavigation />
+          <DrawerNavigator />
         </OverflowMenuProvider>
       </Provider>
     </NavigationContainer>
