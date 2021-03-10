@@ -80,10 +80,10 @@ export const OrdersNavigator = () => {
           headerTintColor: "white",
           headerTitleStyle: {
             fontFamily: "merri-bold",
+            marginHorizontal: 50,
           },
           headerBackTitleStyle: {
             fontFamily: "merri-regular",
-            color: "white",
           },
           headerStyle: {
             backgroundColor: Colors.primary,
@@ -91,7 +91,7 @@ export const OrdersNavigator = () => {
           headerLeft: () => (
             <Button
               title="Back Home"
-              color="white"
+              color={Platform.OS === "ios" ? "white" : "#ccc"}
               onPress={() => navigation.navigate("ProductAllViewScreen")}
             />
           ),

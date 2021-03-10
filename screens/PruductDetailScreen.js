@@ -15,6 +15,11 @@ import HeaderButtonComp from "../components/UI/HeaderButton";
 
 const ProductDetailScreen = ({ route, navigation }) => {
   const { id } = route.params;
+  const lengOfItems = useSelector(
+    (state) => Object.keys(state.cart.items).length
+  );
+  console.log(lengOfItems);
+  const color = lengOfItems > 0 ? "red" : "white";
   const item = useSelector((state) =>
     state.product.Allproducts.find((it) => it.id === id)
   );
@@ -22,15 +27,15 @@ const ProductDetailScreen = ({ route, navigation }) => {
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={HeaderButtonComp}>
+        <HeaderButtons HeaderButtonComponent={HeaderButtonComp} color={color}>
           <Item
             title="cart"
-            iconName={Platform.OS === "ios" ? "cart-outline" : "md-cart"}
+            color={color}
+            iconName={Platform.OS === "ios" ? "cart" : "md-cart"}
             onPress={() => navigation.navigate("CartScreen", { title: "Cart" })}
           />
         </HeaderButtons>
       ),
-      
     });
   }, [navigation]);
   return (

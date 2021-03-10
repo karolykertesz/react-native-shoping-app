@@ -9,13 +9,17 @@ import HeaderButtonComp from "../components/UI/HeaderButton";
 const ProductAllViewScreen = (props) => {
   const products = useSelector((state) => state.product.Allproducts);
   const dispatch = useDispatch();
-
+  const lengOfItems = useSelector(
+    (state) => Object.keys(state.cart.items).length
+  );
+  const color = lengOfItems > 0 ? "red" : "white";
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={HeaderButtonComp}>
+        <HeaderButtons HeaderButtonComponent={HeaderButtonComp} color={color}>
           <Item
             title="cart"
+            color={color}
             iconName={Platform.OS === "ios" ? "cart" : "md-cart"}
             onPress={() =>
               props.navigation.navigate("CartScreen", { title: "Cart" })
@@ -33,7 +37,7 @@ const ProductAllViewScreen = (props) => {
         </HeaderButtons>
       ),
     });
-  }, [props.navigation]);
+  }, [props.navigation, color]);
 
   return (
     <View>

@@ -11,12 +11,7 @@ const HeaderButtonComp = (props) => {
 
   return (
     <View>
-      <HeaderButton
-        IconComponent={Ionicons}
-        iconSize={23}
-        {...props}
-        color="white"
-      />
+      <HeaderButton IconComponent={Ionicons} iconSize={23} {...props} />
     </View>
   );
 };

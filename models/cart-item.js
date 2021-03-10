@@ -3,6 +3,7 @@ class CartItem {
     (this.quantity = quantity), (this.price = price);
     (this.title = title), (this.total = total);
   }
+ 
 }
 
 export default CartItem;

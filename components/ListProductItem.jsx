@@ -7,6 +7,7 @@ import {
   TouchableNativeFeedback,
   Platform,
   Image,
+  Button,
 } from "react-native";
 import Colors from "../helpers/Colors";
 const ListProductItem = (props) => {
@@ -33,15 +34,19 @@ const ListProductItem = (props) => {
           </View>
 
           <View style={styles.btnContainer}>
-            <TitleButton
+            <TouchableOpacity
               onPress={props.viewDetail}
               style={styles.actionButtons}
+              background="red"
             >
               <Text style={styles.btnText}>View Details</Text>
-            </TitleButton>
-            <TitleButton onPress={props.toCart} style={styles.actionButtons}>
+            </TouchableOpacity>
+            <TouchableOpacity
+              onPress={props.toCart}
+              style={styles.actionButtons}
+            >
               <Text style={styles.btnText}>To Cart</Text>
-            </TitleButton>
+            </TouchableOpacity>
           </View>
         </View>
       </TitleButton>
@@ -80,12 +85,16 @@ const styles = StyleSheet.create({
 
   price: { fontSize: 17, color: "#888" },
   actionButtons: {
-    backgroundColor: Platform.OS === "ios" ? "white" : Colors.secondary,
-    height: "100%",
+    backgroundColor: Platform.OS === "ios" ? "white" : Colors.primary,
+    width: 100,
+    height: "90%",
     justifyContent: "center",
     alignItems: "center",
     paddingHorizontal: 10,
     marginHorizontal: 15,
+    marginVertical: 10,
+    borderRadius: 3,
+    elevation: 5,
   },
   details: {
     alignItems: "center",
@@ -98,11 +107,12 @@ const styles = StyleSheet.create({
   },
   btnContainer: {
     flexDirection: "row",
-    justifyContent: "space-between",
+    justifyContent: "space-around",
     alignItems: "center",
     height: "15%",
-    borderRadius: 5,
-    elevation: 3,
+    // borderRadius: 5,
+    // elevation: 3,
+    marginVertical: 10,
   },
   touchStyle: {
     overflow: "hidden",

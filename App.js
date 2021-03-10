@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import DrawerNavigator from "./navigation/DrawerNavigation";
@@ -12,7 +12,7 @@ import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import { LogBox } from "react-native";
 
-LogBox.ignoreLogs(["Require cycle:"]);
+LogBox.ignoreLogs(["Require cycles are allowed"]);
 
 const reducers = combineReducers({
   product: ProductReducer,
@@ -38,6 +38,7 @@ export default function App() {
       />
     );
   }
+
   return (
     <NavigationContainer>
       <Provider store={store}>

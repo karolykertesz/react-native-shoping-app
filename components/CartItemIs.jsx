@@ -43,7 +43,7 @@ const styles = StyleSheet.create({
     alignItems: "center",
   },
   qua: {
-    fontFamily: "Verdana",
+    fontFamily: "merri-regular",
     color: "black",
     fontSize: 16,
     textAlign: "center",

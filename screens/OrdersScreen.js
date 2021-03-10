@@ -1,19 +1,27 @@
 import React from "react";
-import { View, Text, SafeAreaView, FlatList } from "react-native";
+import { SafeAreaView, FlatList, ScrollView, View } from "react-native";
 import { useSelector } from "react-redux";
 import OrderItems from "../components/OredrItems.jsx";
 
-const OrdersScreen = (props) => {
+const OrdersScreen = ({ navigation }) => {
   const orders = useSelector((state) => state.orders.orders);
+  const lengOfItems = useSelector(
+    (state) => Object.keys(state.cart.items).length
+  );
 
   return (
-    <View>
+    <SafeAreaView>
       <FlatList
         data={orders}
-        renderItem={(itemData) => <Text>{itemData.item.total}</Text>}
+        renderItem={(itemData) => (
+          <OrderItems
+            total={itemData.item.total}
+            date={itemData.item.getterDate}
+          />
+        )}
         keyExtractor={(item) => item.id.toString()}
       />
-    </View>
+    </SafeAreaView>
   );
 };
 
