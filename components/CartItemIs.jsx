@@ -51,9 +51,9 @@ const styles = StyleSheet.create({
   },
   titleText: {
     fontFamily: "merri-bold",
-    fontSize: 16,
+    fontSize: 14,
     color: "#ccc",
-    marginHorizontal: 8,
+    marginHorizontal: 5,
   },
   total: {
     fontFamily: "merri-bold",

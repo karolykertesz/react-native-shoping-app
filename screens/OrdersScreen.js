@@ -17,6 +17,7 @@ const OrdersScreen = ({ navigation }) => {
           <OrderItems
             total={itemData.item.total}
             date={itemData.item.getterDate}
+            items={itemData.item.items}
           />
         )}
         keyExtractor={(item) => item.id.toString()}

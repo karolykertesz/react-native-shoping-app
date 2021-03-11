@@ -1,8 +1,13 @@
 import * as React from "react";
 import { Dimensions } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
-import { MainStackNavigation, OrdersNavigator } from "./StackNavigation";
+import {
+  MainStackNavigation,
+  OrdersNavigator,
+  AdminNavigation,
+} from "./StackNavigation";
 import { Entypo } from "@expo/vector-icons";
+import { Fontisto } from "@expo/vector-icons";
 import Colors from "../helpers/Colors";
 
 const Drawer = createDrawerNavigator();
@@ -43,13 +48,22 @@ const DrawerNavigator = () => {
       <Drawer.Screen
         name="Orders"
         component={OrdersNavigator}
-        options={{ drawerLabel: "Orders" }}
         options={{
           drawerLabel: "Orders",
-          drawerIcon: ({ navigation, route }) => (
+          drawerIcon: () => (
             <Entypo name="shopping-cart" size={21} color={Colors.primary} />
           ),
         }}
+      />
+      <Drawer.Screen
+        name="Admin"
+        options={{
+          drawerLabel: "Admin Home",
+          drawerIcon: () => (
+            <Fontisto name="propeller-4" size={21} color={Colors.primary} />
+          ),
+        }}
+        component={AdminNavigation}
       />
     </Drawer.Navigator>
   );

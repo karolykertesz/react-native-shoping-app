@@ -1,4 +1,4 @@
-import { ADD_USER_ORDER } from "../actions/userOrders";
+import { ADD_USER_ORDER, CANCEL_ORDER } from "../actions/userOrders";
 import UserOrdersState from "../../models/userOrders";
 const initialState = {
   orders: [],
@@ -18,7 +18,9 @@ const UserOrders = (state = initialState, action) => {
         ...state,
         orders: state.orders.concat(newOrder),
       };
- 
+    case CANCEL_ORDER:
+      return initialState;
+
     default:
       return state;
   }

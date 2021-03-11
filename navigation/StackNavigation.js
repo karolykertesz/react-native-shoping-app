@@ -5,10 +5,8 @@ import ProductAllViewScreen from "../screens/ProductAllViewScreen";
 import ProductDetailScreen from "../screens/PruductDetailScreen";
 import CartScreen from "../screens/CartScreen";
 import Colors from "../helpers/Colors";
-import { HeaderButtons, Item } from "react-navigation-header-buttons";
-import HeaderButton from "../components/UI/HeaderButton";
-import DrawerNavigator from "./DrawerNavigation";
 import OrdersScreen from "../screens/OrdersScreen";
+import UserProductScreen from "../screens/UserProductScreen";
 const Stack = createStackNavigator();
 
 export const MainStackNavigation = () => {
@@ -77,6 +75,38 @@ export const OrdersNavigator = () => {
         component={OrdersScreen}
         options={({ route, navigation }) => ({
           headerTitle: "Your Orders",
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontFamily: "merri-bold",
+            marginHorizontal: 50,
+          },
+          headerBackTitleStyle: {
+            fontFamily: "merri-regular",
+          },
+          headerStyle: {
+            backgroundColor: Colors.primary,
+          },
+          headerLeft: () => (
+            <Button
+              title="Back Home"
+              color={Platform.OS === "ios" ? "white" : "#ccc"}
+              onPress={() => navigation.navigate("ProductAllViewScreen")}
+            />
+          ),
+        })}
+      />
+    </Stack.Navigator>
+  );
+};
+
+export const AdminNavigation = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        component={UserProductScreen}
+        name="Admin"
+        options={({ navigation }) => ({
+          headerTitle: "Admin Home",
           headerTintColor: "white",
           headerTitleStyle: {
             fontFamily: "merri-bold",
