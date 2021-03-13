@@ -17,12 +17,12 @@ const UserProductItem = (props) => {
     <View style={styles.product}>
       <TitleButton
         useForeground // Android
-        // onPress={() =>
-        //   props.navigation.navigate("ProductDetailScreen", {
-        //     id: props.id,
-        //     title: props.title,
-        //   })
-        // }
+        onPress={() =>
+          props.navigation.navigate("EditScreen", {
+            id: props.id,
+            title: props.title,
+          })
+        }
       >
         <View>
           <View style={styles.imageCont}>
@@ -35,7 +35,12 @@ const UserProductItem = (props) => {
 
           <View style={styles.btnContainer}>
             <TouchableOpacity
-              onPress={props.viewDetail}
+              onPress={() =>
+                props.navigation.navigate("EditScreen", {
+                  id: props.id,
+                  title: props.title,
+                })
+              }
               style={styles.actionButtons}
               background="red"
             >

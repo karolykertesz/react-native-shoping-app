@@ -31,6 +31,7 @@ const ProductAllViewScreen = (props) => {
         <HeaderButtons HeaderButtonComponent={HeaderButtonComp}>
           <Item
             title="cart"
+            color="white"
             iconName={Platform.OS === "ios" ? "menu-sharp" : "md-menu"}
             onPress={() => props.navigation.toggleDrawer()}
           />

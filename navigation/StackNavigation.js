@@ -1,12 +1,16 @@
 import * as React from "react";
 import { createStackNavigator } from "@react-navigation/stack";
-import { Platform, Button } from "react-native";
+import { Platform, Button, TouchableOpacity } from "react-native";
 import ProductAllViewScreen from "../screens/ProductAllViewScreen";
 import ProductDetailScreen from "../screens/PruductDetailScreen";
 import CartScreen from "../screens/CartScreen";
 import Colors from "../helpers/Colors";
 import OrdersScreen from "../screens/OrdersScreen";
 import UserProductScreen from "../screens/UserProductScreen";
+import EditScreen from "../screens/EditScreen";
+import { Entypo } from "@expo/vector-icons";
+import { HeaderButton } from "react-navigation-header-buttons";
+
 const Stack = createStackNavigator();
 
 export const MainStackNavigation = () => {
@@ -104,7 +108,7 @@ export const AdminNavigation = () => {
     <Stack.Navigator>
       <Stack.Screen
         component={UserProductScreen}
-        name="Admin"
+        name="UserProductScreen"
         options={({ navigation }) => ({
           headerTitle: "Admin Home",
           headerTintColor: "white",
@@ -123,6 +127,39 @@ export const AdminNavigation = () => {
               title="Back Home"
               color={Platform.OS === "ios" ? "white" : "#ccc"}
               onPress={() => navigation.navigate("ProductAllViewScreen")}
+            />
+          ),
+          headerRight: () => (
+            <TouchableOpacity
+              onPress={() => navigation.navigate("EditScreen")}
+              style={{ marginHorizontal: 15 }}
+            >
+              <Entypo name="add-to-list" size={24} color="white" />
+            </TouchableOpacity>
+          ),
+        })}
+      />
+      <Stack.Screen
+        component={EditScreen}
+        name="EditScreen"
+        options={({ navigation }) => ({
+          headerTitle: "Edit",
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontFamily: "merri-bold",
+            marginHorizontal: 50,
+          },
+          headerBackTitleStyle: {
+            fontFamily: "merri-regular",
+          },
+          headerStyle: {
+            backgroundColor: Colors.primary,
+          },
+          headerLeft: () => (
+            <Button
+              title="Back"
+              color={Platform.OS === "ios" ? "white" : "#ccc"}
+              onPress={() => navigation.navigate("UserProductScreen")}
             />
           ),
         })}
