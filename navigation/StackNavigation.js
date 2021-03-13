@@ -131,7 +131,7 @@ export const AdminNavigation = () => {
           ),
           headerRight: () => (
             <TouchableOpacity
-              onPress={() => navigation.navigate("EditScreen")}
+              onPress={() => navigation.navigate("EditScreen", { id: null })}
               style={{ marginHorizontal: 15 }}
             >
               <Entypo name="add-to-list" size={24} color="white" />
@@ -143,7 +143,6 @@ export const AdminNavigation = () => {
         component={EditScreen}
         name="EditScreen"
         options={({ navigation }) => ({
-          headerTitle: "Edit",
           headerTintColor: "white",
           headerTitleStyle: {
             fontFamily: "merri-bold",
