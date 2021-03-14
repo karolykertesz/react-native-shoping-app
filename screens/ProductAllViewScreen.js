@@ -8,11 +8,13 @@ import HeaderButtonComp from "../components/UI/HeaderButton";
 
 const ProductAllViewScreen = (props) => {
   const products = useSelector((state) => state.product.Allproducts);
+ 
   const dispatch = useDispatch();
   const lengOfItems = useSelector(
     (state) => Object.keys(state.cart.items).length
   );
   const color = lengOfItems > 0 ? "red" : "white";
+
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: () => (

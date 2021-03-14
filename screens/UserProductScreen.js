@@ -1,10 +1,20 @@
 import React from "react";
-import { FlatList, SafeAreaView, View, Button } from "react-native";
+import { FlatList, View, Alert } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import * as ProductAction from "../store/actions/products";
 import UserProductItem from "../components/UserProductItem";
 
 const UserProductScreen = (props) => {
+  const deleteItem = (id) => {
+    Alert.alert("You're about to delete your product", "Procced?", [
+      { text: "Cancel", style: "cancel" },
+      {
+        text: "Delete",
+        style: "destructive",
+        onPress: () => dispatch(ProductAction.deleteProduct(id)),
+      },
+    ]);
+  };
   const dispatch = useDispatch();
   const userPr = useSelector((state) => state.product.userProduct);
   return (
@@ -20,9 +30,7 @@ const UserProductScreen = (props) => {
             imgUrl={itemData.item.imageUrl}
             price={itemData.item.price}
             viewdetail={() => {}}
-            toDelete={() =>
-              dispatch(ProductAction.deleteProduct(itemData.item.id))
-            }
+            toDelete={() => deleteItem(itemData.item.id)}
           />
         )}
       />

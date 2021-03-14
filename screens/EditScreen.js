@@ -1,5 +1,6 @@
 import React, { useState, useCallback } from "react";
-import { useSelector } from "react-redux";
+import { useSelector, useDispatch } from "react-redux";
+import * as ProductDispatch from "../store/actions/products";
 import {
   View,
   Text,
@@ -7,25 +8,33 @@ import {
   TextInput,
   SafeAreaView,
   ScrollView,
-  Platform,
   TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
 const EditScreen = ({ route, navigation }) => {
+  const dispatch = useDispatch();
   const { id } = route.params;
   const productToEdit = useSelector((state) =>
-    state.product.Allproducts.find((item) => item.id === id)
+    state.product.userProduct.find((item) => item.id === id)
   );
+
   const [title, setTitle] = useState(productToEdit ? productToEdit.title : "");
   const [url, setUrl] = useState(productToEdit ? productToEdit.imageUrl : "");
   const [price, setPrice] = useState("");
   const [desc, setDesc] = useState(
     productToEdit ? productToEdit.description : ""
   );
+
   const editSubmit = useCallback(() => {
-    console.log("submited");
-  }, []);
+    if (productToEdit) {
+      dispatch(ProductDispatch.editProduct(id, title, desc, url));
+      navigation.goBack();
+    } else {
+      dispatch(ProductDispatch.createProduct(title, desc, url, +price));
+      navigation.goBack();
+    }
+  }, [dispatch, id, title, desc, url, price]);
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -39,6 +48,7 @@ const EditScreen = ({ route, navigation }) => {
       headerTitle: id ? "Edit" : "Add",
     });
   }, [navigation, editSubmit]);
+
   return (
     <SafeAreaView>
       <ScrollView style={styles.screen}>
@@ -48,6 +58,12 @@ const EditScreen = ({ route, navigation }) => {
             style={styles.textinput}
             onChangeText={(text) => setTitle(text)}
             value={title}
+            keyboardType="default"
+            autoFocus={true}
+            autoCapitalize="sentences"
+            autoCorrect
+            clearButtonMode="unless-editing"
+            placeholder="Title"
           />
         </View>
         <View style={styles.input}>
@@ -56,6 +72,10 @@ const EditScreen = ({ route, navigation }) => {
             style={styles.textinput}
             onChangeText={(text) => setUrl(text)}
             value={url}
+            keyboardType="default"
+            autoFocus={true}
+            clearButtonMode="unless-editing"
+            placeholder="Please Enter a valid URL"
           />
         </View>
         {!id && (
@@ -65,6 +85,9 @@ const EditScreen = ({ route, navigation }) => {
               style={styles.textinput}
               value={price}
               onChangeText={(text) => setPrice(text)}
+              keyboardType="decimal-pad"
+              autoFocus={true}
+              placeholder="Please Enter a numeric value"
             />
           </View>
         )}
@@ -74,6 +97,12 @@ const EditScreen = ({ route, navigation }) => {
             style={styles.textinput}
             value={desc}
             onChangeText={(text) => setDesc(text)}
+            keyboardType="default"
+            autoCorrect
+            autoFocus={true}
+            clearButtonMode="unless-editing"
+            multiline={true}
+            placeholder="Description"
           />
         </View>
       </ScrollView>
