@@ -1,4 +1,4 @@
-import React, { useState, useCallback } from "react";
+import React, { useCallback, useReducer } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as ProductDispatch from "../store/actions/products";
 import {
@@ -12,29 +12,77 @@ import {
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 
+const ACTIONS = {
+  UPDATE: "UPDATE",
+};
+
+const formReducer = (state, action) => {
+  switch (action.type) {
+    case ACTIONS.UPDATE:
+      const itemsToUppdate = {
+        ...state.inputValues,
+        [action.input]: action.value,
+      };
+      return {
+        ...state,
+        inputValues: itemsToUppdate,
+      };
+  }
+  return state;
+};
+
 const EditScreen = ({ route, navigation }) => {
+  const [stateForm, formDispatch] = useReducer(formReducer, {
+    inputValues: {
+      title: productToEdit ? productToEdit.title : "",
+      url: productToEdit ? productToEdit.imageUrl : "",
+      desc: productToEdit ? productToEdit.description : "",
+      price: "",
+    },
+  });
   const dispatch = useDispatch();
   const { id } = route.params;
   const productToEdit = useSelector((state) =>
     state.product.userProduct.find((item) => item.id === id)
   );
 
-  const [title, setTitle] = useState(productToEdit ? productToEdit.title : "");
-  const [url, setUrl] = useState(productToEdit ? productToEdit.imageUrl : "");
-  const [price, setPrice] = useState("");
-  const [desc, setDesc] = useState(
-    productToEdit ? productToEdit.description : ""
-  );
-
+  const inputTextAdder = (inputId, text) => {
+    formDispatch({
+      type: ACTIONS.UPDATE,
+      value: text,
+      input: inputId,
+    });
+  };
   const editSubmit = useCallback(() => {
     if (productToEdit) {
-      dispatch(ProductDispatch.editProduct(id, title, desc, url));
+      dispatch(
+        ProductDispatch.editProduct(
+          id,
+          stateForm.inputValues.title,
+          stateForm.inputValues.desc,
+          stateForm.inputValues.url
+        )
+      );
       navigation.goBack();
     } else {
-      dispatch(ProductDispatch.createProduct(title, desc, url, +price));
+      dispatch(
+        ProductDispatch.createProduct(
+          stateForm.inputValues.title,
+          stateForm.inputValues.desc,
+          stateForm.inputValues.url,
+          +stateForm.inputValues.price
+        )
+      );
       navigation.goBack();
     }
-  }, [dispatch, id, title, desc, url, price]);
+  }, [
+    dispatch,
+    id,
+    stateForm.inputValues.title,
+    stateForm.inputValues.desc,
+    stateForm.inputValues.url,
+    stateForm.inputValues.price,
+  ]);
   React.useLayoutEffect(() => {
     navigation.setOptions({
       headerRight: () => (
@@ -56,22 +104,23 @@ const EditScreen = ({ route, navigation }) => {
           <Text style={styles.titleText}>Title</Text>
           <TextInput
             style={styles.textinput}
-            onChangeText={(text) => setTitle(text)}
-            value={title}
+            onChangeText={inputTextAdder.bind(this, "this")}
+            value={stateForm.inputValues.title}
             keyboardType="default"
             autoFocus={true}
             autoCapitalize="sentences"
             autoCorrect
             clearButtonMode="unless-editing"
             placeholder="Title"
+            returnKeyType="next"
           />
         </View>
         <View style={styles.input}>
           <Text style={styles.titleText}>URL</Text>
           <TextInput
             style={styles.textinput}
-            onChangeText={(text) => setUrl(text)}
-            value={url}
+            onChangeText={inputTextAdder.bind(this, "url")}
+            value={stateForm.inputValues.url}
             keyboardType="default"
             autoFocus={true}
             clearButtonMode="unless-editing"
@@ -83,8 +132,8 @@ const EditScreen = ({ route, navigation }) => {
             <Text style={styles.titleText}>Price</Text>
             <TextInput
               style={styles.textinput}
-              value={price}
-              onChangeText={(text) => setPrice(text)}
+              value={stateForm.inputValues.price}
+              onChangeText={inputTextAdder.bind(this, "price")}
               keyboardType="decimal-pad"
               autoFocus={true}
               placeholder="Please Enter a numeric value"
@@ -95,8 +144,8 @@ const EditScreen = ({ route, navigation }) => {
           <Text style={styles.titleText}>Description</Text>
           <TextInput
             style={styles.textinput}
-            value={desc}
-            onChangeText={(text) => setDesc(text)}
+            value={stateForm.inputValues.desc}
+            onChangeText={inputTextAdder.bind(this, "desc")}
             keyboardType="default"
             autoCorrect
             autoFocus={true}
