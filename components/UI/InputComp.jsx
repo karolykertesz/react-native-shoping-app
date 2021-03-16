@@ -12,7 +12,7 @@ const InputComp = (props) => {
           value={props.value}
           keyboardType={props.keyboardType}
           autoFocus={true}
-          autoCapitalize="sentences"
+          autoCapitalize="none"
           autoCorrect
           clearButtonMode="unless-editing"
           placeholder={props.placeholder}
@@ -23,7 +23,7 @@ const InputComp = (props) => {
         />
       </View>
       <View>
-        <Text>{props.error}</Text>
+        <Text style={styles.error}>{props.error}</Text>
       </View>
     </View>
   );
@@ -36,6 +36,11 @@ const styles = StyleSheet.create({
     fontFamily: "merri-bold",
     fontSize: 17,
     marginVertical: 9,
+  },
+  error: {
+    textAlign: "center",
+    color: "orange",
+    fontSize: 17,
   },
 });
 

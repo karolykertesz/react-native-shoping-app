@@ -13,17 +13,19 @@ export const constraints = {
   },
   description: {
     presence: true,
+    length: { minimum: 5 },
     format: {
-      pattern: "[^<>{}()@#]+",
+      pattern: "[^<>{}@#]+",
       message: "Invalid Characters!",
     },
   },
   price: {
+    format: {
+      pattern: "[+]?([0-9]*[.])?[0-9]+",
+      message: "needs to be a valid be a number!!",
+    },
     numericality: {
       onlyInteger: false,
-      greaterThan: 0,
-      lessThanOrEqualTo: 1000000,
-      noStrings: true,
     },
   },
 };

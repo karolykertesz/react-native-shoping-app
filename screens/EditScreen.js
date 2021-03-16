@@ -61,17 +61,21 @@ const EditScreen = ({ route, navigation }) => {
     const description = stateForm.inputValues.description;
     const url = stateForm.inputValues.yourUrl;
     const price = stateForm.inputValues.price;
+    const value = validate(
+      {
+        title: title,
+        yourUrl: url,
+        description: description,
+        price: price,
+      },
+      constraints
+    );
+    if (value !== undefined) {
+      setError(value);
+      return;
+    }
     if (productToEdit) {
-      const value = validate(
-        { title: title, yourUrl: url, description: description },
-        constraints
-      );
-      if (value !== undefined) {
-        setError(value);
-        return;
-      }
       dispatch(ProductDispatch.editProduct(id, title, description, url));
-
       navigation.goBack();
     } else {
       dispatch(ProductDispatch.createProduct(title, description, url, +price));
@@ -81,8 +85,8 @@ const EditScreen = ({ route, navigation }) => {
     dispatch,
     id,
     stateForm.inputValues.title,
-    stateForm.inputValues.desc,
-    stateForm.inputValues.url,
+    stateForm.inputValues.description,
+    stateForm.inputValues.yourUrl,
     stateForm.inputValues.price,
   ]);
   React.useLayoutEffect(() => {
@@ -113,7 +117,7 @@ const EditScreen = ({ route, navigation }) => {
                     keyboardType={i.keyboardType}
                     value={stateForm.inputValues[i.id]}
                     title={i.title}
-                    multiline={i.id === "desc" && true}
+                    multiline={i.id === "description" && true}
                     error={error !== undefined ? error[i.id] : ""}
                   />
                 </View>
@@ -127,6 +131,7 @@ const EditScreen = ({ route, navigation }) => {
                   value={stateForm.inputValues[i.id]}
                   title={i.title}
                   multiline={i.id === "desc" && true}
+                  error={error !== undefined ? error[i.id] : ""}
                 />
               </View>
             ))}
