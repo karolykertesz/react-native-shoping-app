@@ -5,7 +5,6 @@ import {
   Text,
   Platform,
   TouchableOpacity,
-  TouchableNativeFeedback,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 const CartItemIs = ({ qua, total, title, removeItem }) => {

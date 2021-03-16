@@ -1,12 +1,31 @@
 import React, { useState } from "react";
-import { View, StyleSheet, Text, Button, Touchable } from "react-native";
+import { View, StyleSheet, Text, Button, Alert } from "react-native";
 import { useDispatch } from "react-redux";
 import Colors from "../helpers/Colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { cancelOrder } from "../store/actions/userOrders";
-const OrderItems = ({ total, date, items }) => {
-  console.log(items);
+
+const OrderItems = ({ total, date, items, navigation }) => {
   const dispatch = useDispatch();
+  const canc = () => {
+    dispatch(cancelOrder());
+    navigation.goBack();
+  };
+  const cancelAllOrder = () => {
+    Alert.alert(
+      "You are about to cancel your Order!",
+      "Would you like to proceed?",
+      [
+        {
+          text: "Cancel my Orders!",
+          style: "destructive",
+          onPress: () => canc(),
+        },
+        { text: "Keep My Orders!", style: "cancel" },
+      ]
+    );
+  };
+
   const [viewItems, setViewItems] = useState(false);
   return (
     <View style={styles.screen}>
@@ -32,7 +51,7 @@ const OrderItems = ({ total, date, items }) => {
             <View style={styles.btnView}>
               <TouchableOpacity
                 style={[styles.btn, { backgroundColor: "#4990e6" }]}
-                onPress={() => dispatch(cancelOrder())}
+                onPress={() => cancelAllOrder()}
               >
                 <Text style={[styles.totalText, { color: "#fff" }]}>
                   Cancel

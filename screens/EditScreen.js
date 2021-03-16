@@ -1,16 +1,18 @@
-import React, { useCallback, useReducer } from "react";
+import React, { useCallback, useReducer, useState } from "react";
 import { useSelector, useDispatch } from "react-redux";
 import * as ProductDispatch from "../store/actions/products";
 import {
   View,
-  Text,
   StyleSheet,
-  TextInput,
   SafeAreaView,
   ScrollView,
   TouchableOpacity,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
+import InputComp from "../components/UI/InputComp";
+import { inputValuesObj } from "../helpers/inputValues";
+const validate = require("validate.js");
+import { constraints } from "../helpers/formvalidate";
 
 const ACTIONS = {
   UPDATE: "UPDATE",
@@ -32,20 +34,21 @@ const formReducer = (state, action) => {
 };
 
 const EditScreen = ({ route, navigation }) => {
-  const [stateForm, formDispatch] = useReducer(formReducer, {
-    inputValues: {
-      title: productToEdit ? productToEdit.title : "",
-      url: productToEdit ? productToEdit.imageUrl : "",
-      desc: productToEdit ? productToEdit.description : "",
-      price: "",
-    },
-  });
   const dispatch = useDispatch();
   const { id } = route.params;
   const productToEdit = useSelector((state) =>
     state.product.userProduct.find((item) => item.id === id)
   );
 
+  const [stateForm, formDispatch] = useReducer(formReducer, {
+    inputValues: {
+      title: productToEdit ? productToEdit.title : "",
+      yourUrl: productToEdit ? productToEdit.imageUrl : "",
+      description: productToEdit ? productToEdit.description : "",
+      price: "",
+    },
+  });
+  const [error, setError] = useState(undefined);
   const inputTextAdder = (inputId, text) => {
     formDispatch({
       type: ACTIONS.UPDATE,
@@ -54,25 +57,24 @@ const EditScreen = ({ route, navigation }) => {
     });
   };
   const editSubmit = useCallback(() => {
+    const title = stateForm.inputValues.title;
+    const description = stateForm.inputValues.description;
+    const url = stateForm.inputValues.yourUrl;
+    const price = stateForm.inputValues.price;
     if (productToEdit) {
-      dispatch(
-        ProductDispatch.editProduct(
-          id,
-          stateForm.inputValues.title,
-          stateForm.inputValues.desc,
-          stateForm.inputValues.url
-        )
+      const value = validate(
+        { title: title, yourUrl: url, description: description },
+        constraints
       );
+      if (value !== undefined) {
+        setError(value);
+        return;
+      }
+      dispatch(ProductDispatch.editProduct(id, title, description, url));
+
       navigation.goBack();
     } else {
-      dispatch(
-        ProductDispatch.createProduct(
-          stateForm.inputValues.title,
-          stateForm.inputValues.desc,
-          stateForm.inputValues.url,
-          +stateForm.inputValues.price
-        )
-      );
+      dispatch(ProductDispatch.createProduct(title, description, url, +price));
       navigation.goBack();
     }
   }, [
@@ -96,77 +98,44 @@ const EditScreen = ({ route, navigation }) => {
       headerTitle: id ? "Edit" : "Add",
     });
   }, [navigation, editSubmit]);
-
+  console.log(error);
   return (
     <SafeAreaView>
       <ScrollView style={styles.screen}>
-        <View style={styles.input}>
-          <Text style={styles.titleText}>Title</Text>
-          <TextInput
-            style={styles.textinput}
-            onChangeText={inputTextAdder.bind(this, "this")}
-            value={stateForm.inputValues.title}
-            keyboardType="default"
-            autoFocus={true}
-            autoCapitalize="sentences"
-            autoCorrect
-            clearButtonMode="unless-editing"
-            placeholder="Title"
-            returnKeyType="next"
-          />
-        </View>
-        <View style={styles.input}>
-          <Text style={styles.titleText}>URL</Text>
-          <TextInput
-            style={styles.textinput}
-            onChangeText={inputTextAdder.bind(this, "url")}
-            value={stateForm.inputValues.url}
-            keyboardType="default"
-            autoFocus={true}
-            clearButtonMode="unless-editing"
-            placeholder="Please Enter a valid URL"
-          />
-        </View>
-        {!id && (
-          <View style={styles.input}>
-            <Text style={styles.titleText}>Price</Text>
-            <TextInput
-              style={styles.textinput}
-              value={stateForm.inputValues.price}
-              onChangeText={inputTextAdder.bind(this, "price")}
-              keyboardType="decimal-pad"
-              autoFocus={true}
-              placeholder="Please Enter a numeric value"
-            />
-          </View>
-        )}
-        <View style={styles.input}>
-          <Text style={styles.titleText}>Description</Text>
-          <TextInput
-            style={styles.textinput}
-            value={stateForm.inputValues.desc}
-            onChangeText={inputTextAdder.bind(this, "desc")}
-            keyboardType="default"
-            autoCorrect
-            autoFocus={true}
-            clearButtonMode="unless-editing"
-            multiline={true}
-            placeholder="Description"
-          />
-        </View>
+        {id
+          ? inputValuesObj
+              .filter((item) => item.id !== "price")
+              .map((i, indx) => (
+                <View style={styles.input} key={indx}>
+                  <InputComp
+                    onChangeText={inputTextAdder.bind(this, i.id)}
+                    placeholder={i.placeholder}
+                    keyboardType={i.keyboardType}
+                    value={stateForm.inputValues[i.id]}
+                    title={i.title}
+                    multiline={i.id === "desc" && true}
+                    error={error !== undefined ? error[i.id] : ""}
+                  />
+                </View>
+              ))
+          : inputValuesObj.map((i, indx) => (
+              <View style={styles.input} key={indx}>
+                <InputComp
+                  onChangeText={inputTextAdder.bind(this, i.id)}
+                  placeholder={i.placeholder}
+                  keyboardType={i.keyboardType}
+                  value={stateForm.inputValues[i.id]}
+                  title={i.title}
+                  multiline={i.id === "desc" && true}
+                />
+              </View>
+            ))}
       </ScrollView>
     </SafeAreaView>
   );
 };
 
 const styles = StyleSheet.create({
-  titleText: {
-    color: "#333333",
-    // textAlign: "center",
-    fontFamily: "merri-bold",
-    fontSize: 17,
-    marginVertical: 9,
-  },
   screen: {
     margin: 30,
   },

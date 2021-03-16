@@ -1,5 +1,5 @@
 import React from "react";
-import { SafeAreaView, FlatList, ScrollView, View } from "react-native";
+import { SafeAreaView, FlatList } from "react-native";
 import { useSelector } from "react-redux";
 import OrderItems from "../components/OredrItems.jsx";
 
@@ -18,6 +18,7 @@ const OrdersScreen = ({ navigation }) => {
             total={itemData.item.total}
             date={itemData.item.getterDate}
             items={itemData.item.items}
+            navigation={navigation}
           />
         )}
         keyExtractor={(item) => item.id.toString()}
