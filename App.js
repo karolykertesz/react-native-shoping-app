@@ -3,7 +3,7 @@ import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import DrawerNavigator from "./navigation/DrawerNavigation";
 import { OverflowMenuProvider } from "react-navigation-header-buttons";
-import { createStore, combineReducers } from "redux";
+import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import ProductReducer from "./store/reducers/products";
 import UserOrders from "./store/reducers/UserOrder";
@@ -11,6 +11,7 @@ import Cart from "./store/reducers/cart";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import { LogBox } from "react-native";
+import thunk from "redux-thunk";
 
 LogBox.ignoreLogs(["Require cycles are allowed"]);
 
@@ -20,7 +21,7 @@ const reducers = combineReducers({
   orders: UserOrders,
 });
 
-const store = createStore(reducers);
+const store = createStore(reducers, applyMiddleware(thunk));
 const loadFont = () => {
   return Font.loadAsync({
     "merri-regular": require("./fonts/Merriweather-Regular.ttf"),

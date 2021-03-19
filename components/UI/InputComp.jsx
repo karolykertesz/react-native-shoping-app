@@ -1,7 +1,7 @@
 import React from "react";
 import { View, TextInput, Text, StyleSheet } from "react-native";
 const InputComp = (props) => {
-  // console.log(props.error);
+ 
   return (
     <View>
       <View>
@@ -32,7 +32,7 @@ const InputComp = (props) => {
 const styles = StyleSheet.create({
   titleText: {
     color: "#333333",
-    // textAlign: "center",
+    
     fontFamily: "merri-bold",
     fontSize: 17,
     marginVertical: 9,
