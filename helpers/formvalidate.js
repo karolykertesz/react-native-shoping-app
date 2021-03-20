@@ -10,6 +10,10 @@ export const constraints = {
   yourUrl: {
     url: true,
     presence: true,
+    format: {
+      pattern: "[^<>{}]+",
+      message: "Invalid Characters!",
+    },
   },
   description: {
     presence: true,

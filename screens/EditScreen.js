@@ -105,30 +105,12 @@ const EditScreen = ({ route, navigation }) => {
   }, [navigation, editSubmit]);
 
   return (
-    <KeyboardAvoidingView
-      behavior="padding"
-      keyboardVerticalOffset={100}
-      style={{ flex: 1 }}
-    >
-      <SafeAreaView>
-        <ScrollView style={styles.screen}>
-          {id
-            ? inputValuesObj
-                .filter((item) => item.id !== "price")
-                .map((i, indx) => (
-                  <View style={styles.input} key={indx}>
-                    <InputComp
-                      onChangeText={inputTextAdder.bind(this, i.id)}
-                      placeholder={i.placeholder}
-                      keyboardType={i.keyboardType}
-                      value={stateForm.inputValues[i.id]}
-                      title={i.title}
-                      multiline={i.id === "description" && true}
-                      error={error !== undefined ? error[i.id] : ""}
-                    />
-                  </View>
-                ))
-            : inputValuesObj.map((i, indx) => (
+    <SafeAreaView>
+      <ScrollView style={styles.screen}>
+        {id
+          ? inputValuesObj
+              .filter((item) => item.id !== "price")
+              .map((i, indx) => (
                 <View style={styles.input} key={indx}>
                   <InputComp
                     onChangeText={inputTextAdder.bind(this, i.id)}
@@ -136,14 +118,26 @@ const EditScreen = ({ route, navigation }) => {
                     keyboardType={i.keyboardType}
                     value={stateForm.inputValues[i.id]}
                     title={i.title}
-                    multiline={i.id === "desc" && true}
+                    multiline={i.id === "description" && true}
                     error={error !== undefined ? error[i.id] : ""}
                   />
                 </View>
-              ))}
-        </ScrollView>
-      </SafeAreaView>
-    </KeyboardAvoidingView>
+              ))
+          : inputValuesObj.map((i, indx) => (
+              <View style={styles.input} key={indx}>
+                <InputComp
+                  onChangeText={inputTextAdder.bind(this, i.id)}
+                  placeholder={i.placeholder}
+                  keyboardType={i.keyboardType}
+                  value={stateForm.inputValues[i.id]}
+                  title={i.title}
+                  multiline={i.id === "desc" && true}
+                  error={error !== undefined ? error[i.id] : ""}
+                />
+              </View>
+            ))}
+      </ScrollView>
+    </SafeAreaView>
   );
 };
 

@@ -1,14 +1,26 @@
-import React from "react";
-import { View, Text, FlatList, StyleSheet, Platform } from "react-native";
+import React, { useEffect, useState } from "react";
+import {
+  View,
+  Text,
+  FlatList,
+  StyleSheet,
+  Platform,
+  ActivityIndicator,
+} from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import ListProductItem from "../components/ListProductItem";
 import { addItemToCart } from "../store/actions/cart";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButtonComp from "../components/UI/HeaderButton";
+import { fetchFromDb } from "../store/actions/products";
 
 const ProductAllViewScreen = (props) => {
+  const [loading, setLoading] = useState(true);
+
+  useEffect(() => {
+    dispatch(fetchFromDb()).then(() => setLoading(false));
+  }, [dispatch]);
   const products = useSelector((state) => state.product.Allproducts);
- 
   const dispatch = useDispatch();
   const lengOfItems = useSelector(
     (state) => Object.keys(state.cart.items).length
@@ -41,7 +53,13 @@ const ProductAllViewScreen = (props) => {
       ),
     });
   }, [props.navigation, color]);
-
+  if (loading) {
+    return (
+      <View>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
   return (
     <View>
       <FlatList

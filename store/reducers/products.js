@@ -4,6 +4,7 @@ import {
   DELETE_PRODUCT,
   CREATE_PRODUCT,
   EDIT_PRODUCT,
+  FETCH_FROM_DB,
 } from "../actions/products";
 
 const initial_state = {
@@ -15,6 +16,13 @@ const initial_state = {
 
 const ProductReducer = (state = initial_state, action) => {
   switch (action.type) {
+    case FETCH_FROM_DB:
+      return {
+        Allproducts: action.products,
+        userProduct: action.products.filter((item) => {
+          return item.ownerId === "u1";
+        }),
+      };
     case DELETE_PRODUCT:
       return {
         ...state,
@@ -23,7 +31,7 @@ const ProductReducer = (state = initial_state, action) => {
       };
     case CREATE_PRODUCT:
       const addingProduct = new Product(
-        new Date().toString(),
+        action.id.toString(),
         "u1",
         action.title,
         action.imageUrl,
@@ -35,6 +43,7 @@ const ProductReducer = (state = initial_state, action) => {
         Allproducts: state.Allproducts.concat(addingProduct),
         userProduct: state.userProduct.concat(addingProduct),
       };
+
     case EDIT_PRODUCT:
       const edi = state.userProduct.findIndex((item) => item.id === action.id);
 
