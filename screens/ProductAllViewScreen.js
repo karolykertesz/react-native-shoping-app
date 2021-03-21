@@ -1,11 +1,12 @@
-import React, { useEffect, useState } from "react";
+import React, { useEffect, useState, useCallback } from "react";
 import {
   View,
-  Text,
   FlatList,
   StyleSheet,
   Platform,
   ActivityIndicator,
+  Text,
+  TouchableOpacity,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import ListProductItem from "../components/ListProductItem";
@@ -15,13 +16,31 @@ import HeaderButtonComp from "../components/UI/HeaderButton";
 import { fetchFromDb } from "../store/actions/products";
 
 const ProductAllViewScreen = (props) => {
-  const [loading, setLoading] = useState(true);
+  const [loading, setLoading] = useState(false);
+  const [errors, setErrors] = useState(null);
+  const dispatch = useDispatch();
+  const loadingPro = useCallback(async () => {
+    setErrors(null);
+    setLoading(true);
+    try {
+      await dispatch(fetchFromDb());
+    } catch (err) {
+      setErrors(err.message);
+    }
+    setLoading(false);
+  }, [dispatch, setLoading, setErrors]);
 
   useEffect(() => {
-    dispatch(fetchFromDb()).then(() => setLoading(false));
-  }, [dispatch]);
+    loadingPro();
+  }, [dispatch, loadingPro]);
+  useEffect(() => {
+    const runHistory = props.navigation.addListener("willFocus", loadingPro);
+    return () => {
+      () => runHistory.remove();
+    };
+  }, [loadingPro]);
   const products = useSelector((state) => state.product.Allproducts);
-  const dispatch = useDispatch();
+
   const lengOfItems = useSelector(
     (state) => Object.keys(state.cart.items).length
   );
@@ -53,9 +72,21 @@ const ProductAllViewScreen = (props) => {
       ),
     });
   }, [props.navigation, color]);
+  if (errors) {
+    return (
+      <View style={styles.activity}>
+        <ActivityIndicator size="large" />
+        <Text>Possible Error!!</Text>
+        <TouchableOpacity onPress={() => loadingPro()} style={styles.button}>
+          <Text style={styles.text}>Reload Again!</Text>
+        </TouchableOpacity>
+      </View>
+    );
+  }
+
   if (loading) {
     return (
-      <View>
+      <View style={styles.activity}>
         <ActivityIndicator size="large" />
       </View>
     );
@@ -64,7 +95,7 @@ const ProductAllViewScreen = (props) => {
     <View>
       <FlatList
         data={products}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={(itemData) => (
           <ListProductItem
             id={itemData.item.id}
@@ -85,5 +116,25 @@ const ProductAllViewScreen = (props) => {
     </View>
   );
 };
+const styles = StyleSheet.create({
+  activity: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  button: {
+    width: 150,
+    height: 40,
+    backgroundColor: "#8ac8e3",
+    borderRadius: 10,
+    marginVertical: 10,
+    justifyContent: "center",
+    alignItems: "center",
+  },
+  text: {
+    textAlign: "center",
+    fontSize: 17,
+  },
+});
 
 export default ProductAllViewScreen;

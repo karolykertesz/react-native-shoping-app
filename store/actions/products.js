@@ -49,26 +49,30 @@ export const editProduct = (id, title, description, imageUrl) => {
 
 export const fetchFromDb = () => {
   return async (dispatch) => {
-    const response = await fetch(
-      "https://rn-shopping.herokuapp.com/productsget"
-    );
-    const dt = await response.json();
-    console.log(dt);
-    const data = [];
-    console.log(data);
-
-    for (let key in dt) {
-      data.push(
-        new Product(
-          dt["pid"],
-          "u1",
-          dt["title"],
-          dt["url"],
-          dt["description"],
-          dt["price"]
-        )
+    try {
+      const response = await fetch(
+        "https://rn-shopping.herokuapp.com/productsget"
       );
+      if (response.ok) {
+        const dt = await response.json();
+        const data = await dt.map(
+          (item) =>
+            new Product(
+              item["pid"],
+              "u1",
+              item["title"],
+              item["url"],
+              item["description"],
+              item["price"]
+            )
+        );
+
+        dispatch({ type: FETCH_FROM_DB, products: data });
+      } else {
+        throw new Error("Check for errors!");
+      }
+    } catch (err) {
+      throw err;
     }
-    dispatch({ type: FETCH_FROM_DB, products: data });
   };
 };
