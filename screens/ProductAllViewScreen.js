@@ -72,6 +72,7 @@ const ProductAllViewScreen = (props) => {
       ),
     });
   }, [props.navigation, color]);
+
   if (errors) {
     return (
       <View style={styles.activity}>

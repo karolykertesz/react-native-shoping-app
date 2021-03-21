@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect } from "react";
 import { FlatList, View, Alert } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import * as ProductAction from "../store/actions/products";
@@ -21,7 +21,7 @@ const UserProductScreen = (props) => {
     <View>
       <FlatList
         data={userPr}
-        keyExtractor={(item) => item.id}
+        keyExtractor={(item, index) => index.toString()}
         renderItem={(itemData) => (
           <UserProductItem
             title={itemData.item.title}
