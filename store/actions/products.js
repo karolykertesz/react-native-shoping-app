@@ -77,7 +77,7 @@ export const editProduct = (id, title, description, imageUrl) => {
       }
     } catch (err) {
       if (err) {
-        console.log(err);
+        throw new Error("Check for errors!");
         return;
       }
     }

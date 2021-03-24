@@ -1,5 +1,6 @@
 import { ADD_USER_ORDER, CANCEL_ORDER } from "../actions/userOrders";
 import UserOrdersState from "../../models/userOrders";
+import { Product } from "../../models/productModels";
 const initialState = {
   orders: [],
   total: 0,
@@ -9,17 +10,23 @@ const UserOrders = (state = initialState, action) => {
   switch (action.type) {
     case ADD_USER_ORDER:
       const newOrder = new UserOrdersState(
-        Math.random(1) * 10,
+        Date.now().toString(),
         action.items,
         action.total,
-        new Date()
+        new Date(),
+        action.quantity
       );
       return {
         ...state,
         orders: state.orders.concat(newOrder),
       };
+
     case CANCEL_ORDER:
-      return initialState;
+      const modifiedState = state.orders.filter((i) => i.id !== action.id);
+      return {
+        ...state,
+        orders: modifiedState,
+      };
 
     default:
       return state;

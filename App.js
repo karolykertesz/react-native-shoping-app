@@ -12,8 +12,9 @@ import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import { LogBox } from "react-native";
 import thunk from "redux-thunk";
+import { composeWithDevTools } from "redux-devtools-extension";
 
-LogBox.ignoreLogs(["Require cycles are allowed"]);
+// LogBox.ignoreLogs(["Require cycles are allowed"]);
 
 const reducers = combineReducers({
   product: ProductReducer,
@@ -21,7 +22,10 @@ const reducers = combineReducers({
   orders: UserOrders,
 });
 
-const store = createStore(reducers, applyMiddleware(thunk));
+const store = createStore(
+  reducers,
+  composeWithDevTools(applyMiddleware(thunk))
+);
 const loadFont = () => {
   return Font.loadAsync({
     "merri-regular": require("./fonts/Merriweather-Regular.ttf"),

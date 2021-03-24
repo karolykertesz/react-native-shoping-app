@@ -1,17 +1,25 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, Button, Alert } from "react-native";
 import { useDispatch } from "react-redux";
 import Colors from "../helpers/Colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { cancelOrder } from "../store/actions/userOrders";
+import PaymantModal from "./PaymantModal";
+import Modal from "react-native-modal";
+import { Overlay } from "react-native-elements";
 
-const OrderItems = ({ total, date, items, navigation }) => {
+const OrderItems = ({ total, date, items, navigation, id }) => {
+  const [modalVisible, setModalVisible] = useState(false);
+
+  const dismissModal = () => {
+    setModalVisible(false);
+  };
   const dispatch = useDispatch();
   const canc = () => {
-    dispatch(cancelOrder());
-    navigation.goBack();
+    dispatch(cancelOrder(id));
+    // navigation.goBack();
   };
-  const cancelAllOrder = () => {
+  const cancelAllOrder = (id) => {
     Alert.alert(
       "You are about to cancel your Order!",
       "Would you like to proceed?",
@@ -62,6 +70,7 @@ const OrderItems = ({ total, date, items, navigation }) => {
             <View style={styles.btnView}>
               <TouchableOpacity
                 style={[styles.btn, { backgroundColor: "#e34d42" }]}
+                onPress={() => setModalVisible(true)}
               >
                 <Text style={[styles.totalText, { color: "#fff" }]}>
                   Pay Now
@@ -72,18 +81,49 @@ const OrderItems = ({ total, date, items, navigation }) => {
           <Text style={styles.totalText}>$ {total.toFixed(2)}</Text>
         </View>
       )}
+      <View>
+        <Modal
+          visible={modalVisible}
+          onBackdropPress={() => dismissModal()}
+          backdropOpacity={1}
+          animationInTiming={500}
+          animationIn="fadeIn"
+          style={styles.modalContent}
+        >
+          <View stye={{ flex: 1 }}>
+            <PaymantModal />
+          </View>
+        </Modal>
+      </View>
     </View>
   );
 };
 
 const styles = StyleSheet.create({
+  modalContent: {
+    flex: 1,
+    marginTop: 0,
+    justifyContent: "center",
+    shadowColor: "black",
+    height: "100%",
+
+    shadowOffset: {
+      width: 0,
+      height: 2,
+    },
+    shadowOpacity: 0.25,
+    shadowRadius: 4,
+    elevation: 5,
+    borderRadius: 10,
+  },
+
   screen: {
     elevation: 5,
     shadowOpacity: 0.2,
     shadowOffset: { width: 0, heigh: 1.4 },
     shadowRadius: 6,
     borderRadius: 10,
-    backgroundColor: "#fff",
+    backgroundColor: "rgb(245, 241, 240)",
     shadowColor: "#8888",
     margin: 10,
     padding: 10,

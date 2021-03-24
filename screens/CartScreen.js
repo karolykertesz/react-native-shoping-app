@@ -16,6 +16,7 @@ const CartScreen = (props) => {
   const total = useSelector((state) => state.cart.sumItems);
 
   const cartItems = useSelector((state) => state.cart.items);
+
   const yy = Object.keys(cartItems)
     .map((i) => ({
       id: i,
@@ -25,7 +26,7 @@ const CartScreen = (props) => {
       key: Math.random(3) * 1000000,
     }))
     .sort((a, b) => (a.id > b.id ? 1 : -1));
-
+  console.log(yy);
   return (
     <SafeAreaView style={{ flex: 1 }}>
       <View style={styles.screen}>

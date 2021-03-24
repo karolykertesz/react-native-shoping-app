@@ -8,6 +8,7 @@ import {
   ScrollView,
   TouchableOpacity,
   KeyboardAvoidingView,
+  ActivityIndicator,
 } from "react-native";
 import { Ionicons } from "@expo/vector-icons";
 import InputComp from "../components/UI/InputComp";
@@ -49,6 +50,7 @@ const EditScreen = ({ route, navigation }) => {
       price: "",
     },
   });
+  const [loading, setLoading] = useState(false);
   const [error, setError] = useState(undefined);
   const inputTextAdder = (inputId, text) => {
     formDispatch({
@@ -58,6 +60,7 @@ const EditScreen = ({ route, navigation }) => {
     });
   };
   const editSubmit = useCallback(() => {
+    setLoading(true);
     const title = stateForm.inputValues.title;
     const description = stateForm.inputValues.description;
     const url = stateForm.inputValues.yourUrl;
@@ -76,10 +79,14 @@ const EditScreen = ({ route, navigation }) => {
       return;
     }
     if (productToEdit) {
-      dispatch(ProductDispatch.editProduct(id, title, description, url));
+      dispatch(
+        ProductDispatch.editProduct(id, title, description, url)
+      ).then(() => setLoading(false));
       navigation.goBack();
     } else {
-      dispatch(ProductDispatch.createProduct(title, description, url, +price));
+      dispatch(
+        ProductDispatch.createProduct(title, description, url, +price)
+      ).then(() => setLoading(false));
       navigation.goBack();
     }
   }, [
@@ -103,7 +110,15 @@ const EditScreen = ({ route, navigation }) => {
       headerTitle: id ? "Edit" : "Add",
     });
   }, [navigation, editSubmit]);
-
+  if (loading) {
+    return (
+      <View>
+        <View style={styles.activity}>
+          <ActivityIndicator size="large" />
+        </View>
+      </View>
+    );
+  }
   return (
     <SafeAreaView>
       <ScrollView style={styles.screen}>
@@ -144,6 +159,11 @@ const EditScreen = ({ route, navigation }) => {
 const styles = StyleSheet.create({
   screen: {
     margin: 30,
+  },
+  activity: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
   input: {
     width: "100%",
