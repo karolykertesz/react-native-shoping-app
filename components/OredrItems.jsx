@@ -90,7 +90,7 @@ const OrderItems = ({ total, date, items, navigation, id }) => {
           animationIn="fadeIn"
           style={styles.modalContent}
         >
-          <View stye={{ flex: 1 }}>
+          <View stye={{ flex: 1, heigh: 300 }}>
             <PaymantModal />
           </View>
         </Modal>

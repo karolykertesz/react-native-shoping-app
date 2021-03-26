@@ -10,7 +10,7 @@ const OrdersScreen = ({ navigation }) => {
   const lengOfItems = useSelector(
     (state) => Object.keys(state.cart.items).length
   );
-  console.log(orders, "the orders");
+
   return (
     <SafeAreaView>
       <FlatList
