@@ -1,8 +1,9 @@
-import React, { useState, useCallback, useReducer } from "react";
+import React, { useState, useCallback, useReducer, useEffect } from "react";
 import { FontAwesome } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import { TextInputMask } from "react-native-masked-text";
-import { constraints } from "../helpers/cardValidate ";
+import { CheckBox } from "react-native-elements";
+import { PaymentsStripe as Stripe } from "expo-payments-stripe";
 
 import {
   StyleSheet,
@@ -11,13 +12,15 @@ import {
   View,
   Image,
   KeyboardAvoidingView,
+  TouchableOpacity,
   ScrollView,
   TouchableWithoutFeedback,
-  Touchable,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Card } from "react-native-elements";
 const validate = require("validate.js");
+import { constraints } from "../helpers/cardValidate ";
+
 const UPDATE_FORM = "UPDATE_FORM";
 const VALIDATE = "VALIDATE";
 const Formreducer = (state, action) => {
@@ -45,7 +48,7 @@ const validateReducer = (state, action) => {
       };
   }
 };
-const PaymantModal = (props) => {
+const PaymantModal = ({ total, dismiss }) => {
   const nameRef = React.useRef();
   let cardRef;
   let date;
@@ -82,14 +85,48 @@ const PaymantModal = (props) => {
       input,
     });
   };
-  const submitPay = useCallback(() => {
-    const creditnumber = parseInt(
-      cardState.inputValues.creditnumber.split("-").join("")
-    );
+  const [errors, setError] = useState({
+    creditCardNumber: null,
+    name: null,
+    date: null,
+    cvv: null,
   });
-  const creditnumber = cardState.inputValues.creditnumber;
-  const v = creditnumber.split("-").join("");
-  console.log(v);
+  const [saveCard, setSaveCard] = useState(false);
+  const [loading, setLoading] = useState(false);
+
+  const submitPay = useCallback(() => {
+    setLoading(true);
+    console.log(valid.validValues.creditCardNumber, "gggggggg");
+    let creditCardNumber = cardState.inputValues.cardNumber.split(" ").join("");
+    const name = cardState.inputValues.name;
+    let r = cardState.inputValues.expDate.split("-");
+    const year = parseInt(r[0]);
+    const month = parseInt(r[1]);
+    const cvv = cardState.inputValues.cvv;
+
+    const value = validate(
+      {
+        name: name,
+        creditCardNumber: creditCardNumber,
+        cvv: cvv.toString(),
+        year: year.toString(),
+        month: month.toString(),
+      },
+      constraints
+    );
+    if (value !== undefined) {
+      setError(value);
+      return;
+    }
+  }, [
+    cardState.inputValues.cardNumber,
+    cardState.inputValues.name,
+    cardState.inputValues.date,
+    cardState.inputValues.cvv,
+    saveCard,
+    errors,
+  ]);
+  console.log(saveCard);
   return (
     <ScrollView scrollable={false}>
       <KeyboardAvoidingView
@@ -99,14 +136,17 @@ const PaymantModal = (props) => {
       >
         <View style={styles.screen}>
           <Card>
-            <TouchableWithoutFeedback onPress={() => props.dismiss()}>
+            <TouchableWithoutFeedback onPress={() => dismiss()}>
               <Fontisto name="close" size={24} color="black" />
             </TouchableWithoutFeedback>
             <Card.Title>Place Your Payment</Card.Title>
             <Card.Divider />
 
             <Image
-              source={require("../assets/red-credit-card-template-design_48190-377.jpeg")}
+              source={{
+                uri:
+                  "https://cdn.pixabay.com/photo/2013/03/29/13/38/contact-97574_960_720.png",
+              }}
               style={styles.image}
             />
             <Input
@@ -118,9 +158,11 @@ const PaymantModal = (props) => {
               value={cardState.inputValues.name}
               returnKeyType="next"
               onSubmitEditing={() => cardRef.getElement().focus()}
-              // blurOnSubmit={false}
+              blurOnSubmit={false}
               autoFocus={true}
               clearButtonMode="unless-editing"
+              errorStyle={{ color: "red" }}
+              errorMessage={errors["name"] ? errors["name"][0] : ""}
             />
 
             <View style={styles.passwordContainer}>
@@ -149,6 +191,13 @@ const PaymantModal = (props) => {
                 }}
               />
             </View>
+            <View>
+              <Text style={styles.errorText}>
+                {errors["creditCardNumber"]
+                  ? errors["creditCardNumber"][0]
+                  : ""}
+              </Text>
+            </View>
             <View style={styles.row}>
               <Fontisto name="date" size={24} color="black" />
               <TextInputMask
@@ -160,7 +209,7 @@ const PaymantModal = (props) => {
                   format: "YYYY-MM",
                 }}
                 blurOnSubmit={false}
-                placeholder="Y/M"
+                placeholder="YYYY/MM"
                 onSubmitEditing={() => cvv.getElement().focus()}
                 returnKeyType={Platform.OS === "ios" ? "done" : "next"}
                 clearButtonMode="unless-editing"
@@ -168,8 +217,8 @@ const PaymantModal = (props) => {
                   toUpdateInput(value, "expDate");
                   areTheyValid(date.isValid(), "expDate");
                 }}
-                defaultValue="huu"
               />
+
               <TextInputMask
                 value={cardState.inputValues.cvv}
                 style={styles.inpl}
@@ -178,7 +227,6 @@ const PaymantModal = (props) => {
                 options={{
                   mask: "999",
                 }}
-                // value={this.state.dt}
                 placeholder="CVV"
                 ref={(ref) => (cvv = ref)}
                 keyboardType="numeric"
@@ -189,6 +237,32 @@ const PaymantModal = (props) => {
                   areTheyValid(cvv.isValid(), "cvv");
                 }}
               />
+            </View>
+            <View style={styles.fetchRow}>
+              <View>
+                <Text style={styles.errorText}>
+                  {errors["year"] ? errors["year"] : ""}
+                </Text>
+                <Text style={styles.errorText}>
+                  {errors["month"] ? errors["month"] : ""}
+                </Text>
+              </View>
+              <View>
+                <Text style={styles.errorText}>
+                  {errors["cvv"] ? errors["cvv"][0] : ""}
+                </Text>
+              </View>
+            </View>
+            <CheckBox
+              title="Save my card"
+              checked={saveCard}
+              containerStyle={{ width: "100%", backgroundColor: "white" }}
+              onPress={() => setSaveCard(!saveCard)}
+            />
+            <View style={styles.submit}>
+              <TouchableOpacity onPress={() => submitPay()}>
+                <Text style={styles.submitText}>Pay For ${total}</Text>
+              </TouchableOpacity>
             </View>
           </Card>
         </View>
@@ -201,6 +275,20 @@ const styles = StyleSheet.create({
   screen: {
     width: "100%",
   },
+  submit: {
+    backgroundColor: "#3333ff",
+    width: "60%",
+    alignItems: "center",
+    justifyContent: "center",
+    marginHorizontal: 72,
+    marginVertical: 4,
+    height: 30,
+    borderRadius: 8,
+  },
+  submitText: {
+    color: "white",
+    fontSize: 17,
+  },
   row: {
     flexDirection: "row",
     justifyContent: "space-around",
@@ -209,13 +297,22 @@ const styles = StyleSheet.create({
     borderColor: "#000",
     padding: 10,
   },
+  fetchRow: {
+    flexDirection: "row",
+    justifyContent: "space-around",
+    alignItems: "center",
+    padding: 10,
+  },
   passwordContainer: {
     flexDirection: "row",
     borderBottomWidth: 1,
     borderColor: "#000",
     padding: 10,
   },
-
+  errorText: {
+    color: "red",
+    textTransform: "lowercase",
+  },
   input: {
     fontSize: 16,
     fontFamily: "merri-regular",
@@ -237,8 +334,11 @@ const styles = StyleSheet.create({
   },
 
   image: {
-    height: 150,
+    height: 180,
     width: "100%",
+    marginBottom: 10,
+
+    alignSelf: "center",
   },
   container: {
     flex: 1,

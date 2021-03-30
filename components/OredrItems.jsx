@@ -6,7 +6,6 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { cancelOrder } from "../store/actions/userOrders";
 import PaymantModal from "./PaymantModal";
 import Modal from "react-native-modal";
-import { Overlay } from "react-native-elements";
 
 const OrderItems = ({ total, date, items, navigation, id }) => {
   const [modalVisible, setModalVisible] = useState(false);
@@ -91,7 +90,7 @@ const OrderItems = ({ total, date, items, navigation, id }) => {
           style={styles.modalContent}
         >
           <View stye={{ flex: 1, heigh: 300 }}>
-            <PaymantModal dismiss={dismissModal} />
+            <PaymantModal dismiss={dismissModal} total={total} />
           </View>
         </Modal>
       </View>

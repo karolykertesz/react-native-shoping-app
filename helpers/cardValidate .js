@@ -1,9 +1,11 @@
+const validate = require("validate.js");
+
 export const constraints = {
   name: {
     presence: true,
     format: {
       pattern: "^[a-zA-Zs]*$",
-      message: "Must be letters",
+      message: "Must be letters only!!",
     },
     length: { minimum: 2 },
   },
@@ -47,13 +49,33 @@ export const constraints = {
       length: { is: 5 },
     };
   },
-  cvv: {
+  month: {
     presence: true,
-    length: 3,
+    length: 2,
     numericality: {
       onlyInteger: true,
-      greaterThan: 99,
-      lessThanOrEqualTo: 99,
+      greaterThan: 0,
+      lessThanOrEqualTo: 12,
+      message: "invalid input",
+    },
+  },
+  year: {
+    presence: true,
+    length: 4,
+    numericality: {
+      onlyInteger: true,
+      greaterThan: 2020,
+      message: "invalid input",
+    },
+  },
+  cvv: {
+    presence: true,
+    length: { minimum: 3, maximum: 3, message: "to Short!" },
+    numericality: {
+      onlyInteger: true,
+      greaterThan: 1,
+      lessThanOrEqualTo: 999,
+      message: "invalid",
     },
   },
 };
