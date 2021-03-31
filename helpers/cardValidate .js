@@ -4,7 +4,7 @@ export const constraints = {
   name: {
     presence: true,
     format: {
-      pattern: "^[a-zA-Zs]*$",
+      pattern: /^[a-zA-Zs\s]*$/,
       message: "Must be letters only!!",
     },
     length: { minimum: 2 },

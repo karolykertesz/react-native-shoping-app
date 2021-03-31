@@ -4,7 +4,7 @@ import { Fontisto } from "@expo/vector-icons";
 import { TextInputMask } from "react-native-masked-text";
 import { CheckBox } from "react-native-elements";
 import { PaymentsStripe as Stripe } from "expo-payments-stripe";
-
+import axios from "axios";
 import {
   StyleSheet,
   Text,
@@ -53,7 +53,7 @@ const PaymantModal = ({ total, dismiss }) => {
   let cardRef;
   let date;
   let cvv;
-
+  const [success, Setsuccess] = useState("");
   const [cardState, addValue] = useReducer(Formreducer, {
     inputValues: {
       name: "",
@@ -93,17 +93,16 @@ const PaymantModal = ({ total, dismiss }) => {
   });
   const [saveCard, setSaveCard] = useState(false);
   const [loading, setLoading] = useState(false);
+  const [dissabled, setDissabled] = useState(false);
 
-  const submitPay = useCallback(() => {
+  const submitPay = useCallback(async () => {
     setLoading(true);
-    console.log(valid.validValues.creditCardNumber, "gggggggg");
     let creditCardNumber = cardState.inputValues.cardNumber.split(" ").join("");
     const name = cardState.inputValues.name;
     let r = cardState.inputValues.expDate.split("-");
     const year = parseInt(r[0]);
     const month = parseInt(r[1]);
     const cvv = cardState.inputValues.cvv;
-
     const value = validate(
       {
         name: name,
@@ -118,6 +117,27 @@ const PaymantModal = ({ total, dismiss }) => {
       setError(value);
       return;
     }
+    try {
+      const request = await axios({
+        method: "POST",
+        url: "https://rn-shopping.herokuapp.com/one/onep",
+        data: {
+          creditCard: creditCardNumber,
+          name,
+          cardMonth: month,
+          cardYear: year,
+          cardCvc: cvv,
+          amount: total,
+        },
+        headers: { "Content-Type": "application/json" },
+      });
+      setDissabled(true);
+      if (request.status == 200) {
+        Setsuccess(request["data"]["Success"]["description"]);
+      }
+    } catch (err) {
+      console.log(err);
+    }
   }, [
     cardState.inputValues.cardNumber,
     cardState.inputValues.name,
@@ -126,7 +146,8 @@ const PaymantModal = ({ total, dismiss }) => {
     saveCard,
     errors,
   ]);
-  console.log(saveCard);
+  const t = cardState.inputValues.name;
+
   return (
     <ScrollView scrollable={false}>
       <KeyboardAvoidingView
@@ -260,9 +281,15 @@ const PaymantModal = ({ total, dismiss }) => {
               onPress={() => setSaveCard(!saveCard)}
             />
             <View style={styles.submit}>
-              <TouchableOpacity onPress={() => submitPay()}>
+              <TouchableOpacity
+                onPress={() => submitPay()}
+                disabled={dissabled}
+              >
                 <Text style={styles.submitText}>Pay For ${total}</Text>
               </TouchableOpacity>
+              <View>
+                <Text>{success && success}</Text>
+              </View>
             </View>
           </Card>
         </View>
