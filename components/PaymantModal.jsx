@@ -1,9 +1,9 @@
-import React, { useState, useCallback, useReducer, useEffect } from "react";
+import React, { useState, useCallback, useReducer } from "react";
+import { useDispatch } from "react-redux";
 import { FontAwesome } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import { TextInputMask } from "react-native-masked-text";
 import { CheckBox } from "react-native-elements";
-import { PaymentsStripe as Stripe } from "expo-payments-stripe";
 import axios from "axios";
 import {
   StyleSheet,
@@ -15,11 +15,16 @@ import {
   TouchableOpacity,
   ScrollView,
   TouchableWithoutFeedback,
+  ActivityIndicator,
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Card } from "react-native-elements";
 const validate = require("validate.js");
 import { constraints } from "../helpers/cardValidate ";
+import Paybutton from "./UI/PayButton";
+import SuccesButton from "./UI/SuccesButton";
+import SuccessButton from "./UI/SuccesButton";
+import { cancelOrder } from "../store/actions/userOrders";
 
 const UPDATE_FORM = "UPDATE_FORM";
 const VALIDATE = "VALIDATE";
@@ -48,12 +53,14 @@ const validateReducer = (state, action) => {
       };
   }
 };
-const PaymantModal = ({ total, dismiss }) => {
+const PaymantModal = ({ total, dismiss, id }) => {
+  const dispatch = useDispatch();
   const nameRef = React.useRef();
   let cardRef;
   let date;
   let cvv;
   const [success, Setsuccess] = useState("");
+  const [succeed, setSucceed] = useState(false);
   const [cardState, addValue] = useReducer(Formreducer, {
     inputValues: {
       name: "",
@@ -94,6 +101,7 @@ const PaymantModal = ({ total, dismiss }) => {
   const [saveCard, setSaveCard] = useState(false);
   const [loading, setLoading] = useState(false);
   const [dissabled, setDissabled] = useState(false);
+  const [cardErrors, setCardErrors] = useState("");
 
   const submitPay = useCallback(async () => {
     setLoading(true);
@@ -132,11 +140,24 @@ const PaymantModal = ({ total, dismiss }) => {
         headers: { "Content-Type": "application/json" },
       });
       setDissabled(true);
-      if (request.status == 200) {
+      if (request.status === 200) {
+        setSucceed(true);
         Setsuccess(request["data"]["Success"]["description"]);
+        setLoading(false);
+        setError({
+          creditCardNumber: null,
+          name: null,
+          date: null,
+          cvv: null,
+        });
+        setCardErrors("");
+        console.log(response);
+        setTimeout(() => dispatch(cancelOrder(id)), 3000);
+        dismiss();
       }
     } catch (err) {
-      console.log(err);
+      setCardErrors(err["response"]["data"]["errors"][0]["msg"]);
+      console.log(err["response"]["data"]["errors"][0]);
     }
   }, [
     cardState.inputValues.cardNumber,
@@ -145,9 +166,15 @@ const PaymantModal = ({ total, dismiss }) => {
     cardState.inputValues.cvv,
     saveCard,
     errors,
+    cardErrors,
   ]);
-  const t = cardState.inputValues.name;
-
+  if (loading) {
+    return (
+      <View style={styles.activity}>
+        <ActivityIndicator size="large" />
+      </View>
+    );
+  }
   return (
     <ScrollView scrollable={false}>
       <KeyboardAvoidingView
@@ -160,9 +187,13 @@ const PaymantModal = ({ total, dismiss }) => {
             <TouchableWithoutFeedback onPress={() => dismiss()}>
               <Fontisto name="close" size={24} color="black" />
             </TouchableWithoutFeedback>
-            <Card.Title>Place Your Payment</Card.Title>
+            <Card.Title>
+              {succeed === false ? "Place Your Payment" : success}
+            </Card.Title>
             <Card.Divider />
-
+            <View style={styles.invalid}>
+              <Text style={styles.invalidText}>{cardErrors && cardErrors}</Text>
+            </View>
             <Image
               source={{
                 uri:
@@ -280,17 +311,16 @@ const PaymantModal = ({ total, dismiss }) => {
               containerStyle={{ width: "100%", backgroundColor: "white" }}
               onPress={() => setSaveCard(!saveCard)}
             />
-            <View style={styles.submit}>
-              <TouchableOpacity
-                onPress={() => submitPay()}
-                disabled={dissabled}
-              >
-                <Text style={styles.submitText}>Pay For ${total}</Text>
-              </TouchableOpacity>
-              <View>
-                <Text>{success && success}</Text>
-              </View>
-            </View>
+
+            {succeed === false ? (
+              <Paybutton total={total} submitPay={cancelOrder} id={id} />
+            ) : (
+              <SuccessButton
+                dismiss={dismiss}
+                cancelOrder={cancelOrder}
+                id={id}
+              />
+            )}
           </Card>
         </View>
       </KeyboardAvoidingView>
@@ -302,15 +332,13 @@ const styles = StyleSheet.create({
   screen: {
     width: "100%",
   },
-  submit: {
-    backgroundColor: "#3333ff",
-    width: "60%",
-    alignItems: "center",
-    justifyContent: "center",
-    marginHorizontal: 72,
-    marginVertical: 4,
-    height: 30,
-    borderRadius: 8,
+
+  invalidText: {
+    textAlign: "center",
+    fontSize: 18,
+    fontWeight: "bold",
+    textTransform: "capitalize",
+    color: "red",
   },
   submitText: {
     color: "white",
@@ -377,6 +405,11 @@ const styles = StyleSheet.create({
   button: {
     margin: 36,
     marginTop: 0,
+  },
+  activity: {
+    flex: 1,
+    justifyContent: "center",
+    alignItems: "center",
   },
 });
 
