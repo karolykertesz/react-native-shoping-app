@@ -53,13 +53,12 @@ const validateReducer = (state, action) => {
       };
   }
 };
-const PaymantModal = ({ total, dismiss, id }) => {
+const PaymantModal = ({ total, dismiss, id, navigation }) => {
   const dispatch = useDispatch();
   const nameRef = React.useRef();
   let cardRef;
   let date;
   let cvv;
-  const [success, Setsuccess] = useState("");
   const [succeed, setSucceed] = useState(false);
   const [cardState, addValue] = useReducer(Formreducer, {
     inputValues: {
@@ -142,7 +141,6 @@ const PaymantModal = ({ total, dismiss, id }) => {
       setDissabled(true);
       if (request.status === 200) {
         setSucceed(true);
-        Setsuccess(request["data"]["Success"]["description"]);
         setLoading(false);
         setError({
           creditCardNumber: null,
@@ -150,14 +148,16 @@ const PaymantModal = ({ total, dismiss, id }) => {
           date: null,
           cvv: null,
         });
+       
         setCardErrors("");
-        console.log(response);
-        setTimeout(() => dispatch(cancelOrder(id)), 3000);
-        dismiss();
+        navigation.navigate("ThankYouScreen", {
+          total,
+          success: request["data"]["Success"]["description"],
+        });
+        dispatch(cancelOrder(id));
       }
     } catch (err) {
       setCardErrors(err["response"]["data"]["errors"][0]["msg"]);
-      console.log(err["response"]["data"]["errors"][0]);
     }
   }, [
     cardState.inputValues.cardNumber,
@@ -166,7 +166,7 @@ const PaymantModal = ({ total, dismiss, id }) => {
     cardState.inputValues.cvv,
     saveCard,
     errors,
-    cardErrors,
+    dispatch,
   ]);
   if (loading) {
     return (
@@ -187,9 +187,7 @@ const PaymantModal = ({ total, dismiss, id }) => {
             <TouchableWithoutFeedback onPress={() => dismiss()}>
               <Fontisto name="close" size={24} color="black" />
             </TouchableWithoutFeedback>
-            <Card.Title>
-              {succeed === false ? "Place Your Payment" : success}
-            </Card.Title>
+            <Card.Title>Place Your Payment</Card.Title>
             <Card.Divider />
             <View style={styles.invalid}>
               <Text style={styles.invalidText}>{cardErrors && cardErrors}</Text>
@@ -313,13 +311,9 @@ const PaymantModal = ({ total, dismiss, id }) => {
             />
 
             {succeed === false ? (
-              <Paybutton total={total} submitPay={cancelOrder} id={id} />
+              <Paybutton total={total} submitPay={submitPay} />
             ) : (
-              <SuccessButton
-                dismiss={dismiss}
-                cancelOrder={cancelOrder}
-                id={id}
-              />
+              <SuccessButton cancelOrder={cancelOrder} id={id} />
             )}
           </Card>
         </View>

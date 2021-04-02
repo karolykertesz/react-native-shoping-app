@@ -90,7 +90,12 @@ const OrderItems = ({ total, date, items, navigation, id }) => {
           style={styles.modalContent}
         >
           <View stye={{ flex: 1, heigh: 300 }}>
-            <PaymantModal dismiss={dismissModal} total={total} id={id} />
+            <PaymantModal
+              dismiss={dismissModal}
+              total={total}
+              id={id}
+              navigation={navigation}
+            />
           </View>
         </Modal>
       </View>

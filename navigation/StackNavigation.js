@@ -9,7 +9,7 @@ import OrdersScreen from "../screens/OrdersScreen";
 import UserProductScreen from "../screens/UserProductScreen";
 import EditScreen from "../screens/EditScreen";
 import { Entypo } from "@expo/vector-icons";
-import { HeaderButton } from "react-navigation-header-buttons";
+import ThankYouScreen from "../screens/ThankYouScreen";
 
 const Stack = createStackNavigator();
 
@@ -79,6 +79,31 @@ export const OrdersNavigator = () => {
         component={OrdersScreen}
         options={({ route, navigation }) => ({
           headerTitle: "Your Orders",
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontFamily: "merri-bold",
+            marginHorizontal: 50,
+          },
+          headerBackTitleStyle: {
+            fontFamily: "merri-regular",
+          },
+          headerStyle: {
+            backgroundColor: Colors.primary,
+          },
+          headerLeft: () => (
+            <Button
+              title="Back Home"
+              color={Platform.OS === "ios" ? "white" : "#ccc"}
+              onPress={() => navigation.navigate("ProductAllViewScreen")}
+            />
+          ),
+        })}
+      />
+      <Stack.Screen
+        name="ThankYouScreen"
+        component={ThankYouScreen}
+        options={({ route, navigation }) => ({
+          headerTitle: "Thank You",
           headerTintColor: "white",
           headerTitleStyle: {
             fontFamily: "merri-bold",
