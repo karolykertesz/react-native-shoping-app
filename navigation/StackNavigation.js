@@ -10,6 +10,7 @@ import UserProductScreen from "../screens/UserProductScreen";
 import EditScreen from "../screens/EditScreen";
 import { Entypo } from "@expo/vector-icons";
 import ThankYouScreen from "../screens/ThankYouScreen";
+import AuthScreen from "../screens/AuthScreen";
 
 const Stack = createStackNavigator();
 
@@ -187,6 +188,30 @@ export const AdminNavigation = () => {
             />
           ),
         })}
+      />
+    </Stack.Navigator>
+  );
+};
+
+export const AuthNavigator = () => {
+  return (
+    <Stack.Navigator>
+      <Stack.Screen
+        component={AuthScreen}
+        name="Authenticate"
+        options={{
+          headerTintColor: "white",
+          headerTitleStyle: {
+            fontFamily: "merri-bold",
+            marginHorizontal: 50,
+          },
+          headerBackTitleStyle: {
+            fontFamily: "merri-regular",
+          },
+          headerStyle: {
+            backgroundColor: Colors.primary,
+          },
+        }}
       />
     </Stack.Navigator>
   );

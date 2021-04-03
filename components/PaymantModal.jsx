@@ -148,7 +148,7 @@ const PaymantModal = ({ total, dismiss, id, navigation }) => {
           date: null,
           cvv: null,
         });
-       
+
         setCardErrors("");
         navigation.navigate("ThankYouScreen", {
           total,
@@ -213,6 +213,7 @@ const PaymantModal = ({ total, dismiss, id, navigation }) => {
               clearButtonMode="unless-editing"
               errorStyle={{ color: "red" }}
               errorMessage={errors["name"] ? errors["name"][0] : ""}
+              autoCapitalize="none"
             />
 
             <View style={styles.passwordContainer}>

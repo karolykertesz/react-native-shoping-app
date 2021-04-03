@@ -13,11 +13,15 @@
     "updates": {
       "fallbackToCacheTimeout": 0
     },
-    "assetBundlePatterns": [
-      "**/*"
-    ],
+    "assetBundlePatterns": ["**/*"],
     "ios": {
-      "supportsTablet": true
+      "supportsTablet": true,
+      "bundleIdentifier": "host.exp.exponent",
+      "config": {
+        "googleSignIn": {
+          "reservedClientId": "632910480566-3nc2kqa5vhoo04m3jdpv3atmjsmnt5hv.apps.googleusercontent.com"
+        }
+      }
     },
     "android": {
       "adaptiveIcon": {

@@ -1,6 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
+import { AuthNavigator } from "./navigation/StackNavigation";
 import DrawerNavigator from "./navigation/DrawerNavigation";
 import { OverflowMenuProvider } from "react-navigation-header-buttons";
 import { createStore, combineReducers, applyMiddleware } from "redux";
@@ -15,7 +16,7 @@ import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
 
 // LogBox.ignoreLogs(["Require cycles are allowed"]);
-
+console.ignoredYellowBox = ["Warning:"];
 const reducers = combineReducers({
   product: ProductReducer,
   cart: Cart,
@@ -34,6 +35,7 @@ const loadFont = () => {
 };
 export default function App() {
   const [isready, setReady] = useState(true);
+  const [tokken, setTokken] = useState(null);
   if (isready) {
     return (
       <AppLoading
@@ -48,7 +50,7 @@ export default function App() {
     <NavigationContainer>
       <Provider store={store}>
         <OverflowMenuProvider>
-          <DrawerNavigator />
+          {tokken === null ? <AuthNavigator /> : <DrawerNavigator />}
         </OverflowMenuProvider>
       </Provider>
     </NavigationContainer>

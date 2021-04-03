@@ -15,23 +15,27 @@ import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButtonComp from "../components/UI/HeaderButton";
 import { fetchFromDb } from "../store/actions/products";
 
+
 const ProductAllViewScreen = (props) => {
   const [loading, setLoading] = useState(false);
+  const [refresh, setRefresh] = useState(false);
   const [errors, setErrors] = useState(null);
   const dispatch = useDispatch();
   const loadingPro = useCallback(async () => {
+    setRefresh(true);
     setErrors(null);
-    setLoading(true);
+
     try {
       await dispatch(fetchFromDb());
     } catch (err) {
       setErrors(err.message);
     }
-    setLoading(false);
+    setRefresh(false);
   }, [dispatch, setLoading, setErrors]);
 
   useEffect(() => {
-    loadingPro();
+    setLoading(true);
+    loadingPro().then(() => setLoading(false));
   }, [dispatch, loadingPro]);
   useEffect(() => {
     const runHistory = props.navigation.addListener("willFocus", loadingPro);
@@ -95,6 +99,8 @@ const ProductAllViewScreen = (props) => {
   return (
     <View>
       <FlatList
+        onRefresh={() => loadingPro()}
+        refreshing={refresh}
         data={products}
         keyExtractor={(item, index) => index.toString()}
         renderItem={(itemData) => (
