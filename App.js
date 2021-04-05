@@ -1,4 +1,4 @@
-import React, { useState, useEffect } from "react";
+import React, { useState } from "react";
 import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { AuthNavigator } from "./navigation/StackNavigation";
@@ -7,20 +7,19 @@ import { OverflowMenuProvider } from "react-navigation-header-buttons";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import { Provider } from "react-redux";
 import ProductReducer from "./store/reducers/products";
+import authReducer from "./store/reducers/auth";
 import UserOrders from "./store/reducers/UserOrder";
 import Cart from "./store/reducers/cart";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
-import { LogBox } from "react-native";
+import { useSelector } from "react-redux";
 import thunk from "redux-thunk";
 import { composeWithDevTools } from "redux-devtools-extension";
-
-// LogBox.ignoreLogs(["Require cycles are allowed"]);
-console.ignoredYellowBox = ["Warning:"];
 const reducers = combineReducers({
   product: ProductReducer,
   cart: Cart,
   orders: UserOrders,
+  auth: authReducer,
 });
 
 const store = createStore(
@@ -34,8 +33,8 @@ const loadFont = () => {
   });
 };
 export default function App() {
+  let tokken = null;
   const [isready, setReady] = useState(true);
-  const [tokken, setTokken] = useState(null);
   if (isready) {
     return (
       <AppLoading

@@ -31,6 +31,9 @@
     },
     "web": {
       "favicon": "./assets/favicon.png"
+    },
+    "extra": {
+      "google": "632910480566-7mr5eicua4iocl7ek3alrospollralcr.apps.googleusercontent.com"
     }
   }
 }
