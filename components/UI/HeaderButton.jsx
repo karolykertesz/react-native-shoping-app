@@ -3,6 +3,7 @@ import { View } from "react-native";
 import { HeaderButton } from "react-navigation-header-buttons";
 import { Ionicons } from "@expo/vector-icons";
 import { useSelector } from "react-redux";
+import { FontAwesome } from "@expo/vector-icons";
 
 const HeaderButtonComp = (props) => {
   const lengOfItems = useSelector(
@@ -16,6 +17,12 @@ const HeaderButtonComp = (props) => {
   );
 };
 
-
+export const SignOutComp = (props) => {
+  return (
+    <View>
+      <HeaderButton IconComponent={FontAwesome} iconSize={23} {...props} />
+    </View>
+  );
+};
 
 export default HeaderButtonComp;

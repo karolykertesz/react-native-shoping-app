@@ -4,28 +4,14 @@ import { NavigationContainer } from "@react-navigation/native";
 import { AuthNavigator } from "./navigation/StackNavigation";
 import DrawerNavigator from "./navigation/DrawerNavigation";
 import { OverflowMenuProvider } from "react-navigation-header-buttons";
-import { createStore, combineReducers, applyMiddleware } from "redux";
-import { Provider } from "react-redux";
-import ProductReducer from "./store/reducers/products";
-import authReducer from "./store/reducers/auth";
-import UserOrders from "./store/reducers/UserOrder";
-import Cart from "./store/reducers/cart";
+// import { createStore, combineReducers, applyMiddleware } from "redux";
+// import { useDispatch } from "react-redux";
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
+import * as SecureStore from "expo-secure-store";
 import { useSelector } from "react-redux";
-import thunk from "redux-thunk";
-import { composeWithDevTools } from "redux-devtools-extension";
-const reducers = combineReducers({
-  product: ProductReducer,
-  cart: Cart,
-  orders: UserOrders,
-  auth: authReducer,
-});
+import { RootStack } from "./navigation/DrawerNavigation";
 
-const store = createStore(
-  reducers,
-  composeWithDevTools(applyMiddleware(thunk))
-);
 const loadFont = () => {
   return Font.loadAsync({
     "merri-regular": require("./fonts/Merriweather-Regular.ttf"),
@@ -33,8 +19,9 @@ const loadFont = () => {
   });
 };
 export default function App() {
-  let tokken = null;
   const [isready, setReady] = useState(true);
+  const token = useSelector((state) => state.auth.token);
+  console.log(useSelector((state) => state.auth));
   if (isready) {
     return (
       <AppLoading
@@ -47,11 +34,15 @@ export default function App() {
 
   return (
     <NavigationContainer>
-      <Provider store={store}>
-        <OverflowMenuProvider>
-          {tokken === null ? <AuthNavigator /> : <DrawerNavigator />}
-        </OverflowMenuProvider>
-      </Provider>
+      <OverflowMenuProvider>
+        <RootStack.Navigator headerMode="none">
+          {token !== null ? (
+            <RootStack.Screen name="Auth" component={DrawerNavigator} />
+          ) : (
+            <RootStack.Screen name="Drawer" component={AuthNavigator} />
+          )}
+        </RootStack.Navigator>
+      </OverflowMenuProvider>
     </NavigationContainer>
   );
 }

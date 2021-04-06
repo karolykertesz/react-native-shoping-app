@@ -14,17 +14,23 @@ import { addItemToCart } from "../store/actions/cart";
 import { HeaderButtons, Item } from "react-navigation-header-buttons";
 import HeaderButtonComp from "../components/UI/HeaderButton";
 import { fetchFromDb } from "../store/actions/products";
-
+import { SignOutComp } from "../components/UI/HeaderButton";
+import * as SecureStore from "expo-secure-store";
+import { logOut } from "../store/actions/auth";
 
 const ProductAllViewScreen = (props) => {
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [errors, setErrors] = useState(null);
+  const [token, setToken] = useState(null);
   const dispatch = useDispatch();
+  const signOut = () => {
+    SecureStore.deleteItemAsync("token").then().then(dispatch(logOut()));
+  };
+
   const loadingPro = useCallback(async () => {
     setRefresh(true);
     setErrors(null);
-
     try {
       await dispatch(fetchFromDb());
     } catch (err) {
@@ -36,7 +42,7 @@ const ProductAllViewScreen = (props) => {
   useEffect(() => {
     setLoading(true);
     loadingPro().then(() => setLoading(false));
-  }, [dispatch, loadingPro]);
+  }, [dispatch, loadingPro, token]);
   useEffect(() => {
     const runHistory = props.navigation.addListener("willFocus", loadingPro);
     return () => {
@@ -53,17 +59,28 @@ const ProductAllViewScreen = (props) => {
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: () => (
-        <HeaderButtons HeaderButtonComponent={HeaderButtonComp} color={color}>
-          <Item
-            title="cart"
-            color={color}
-            iconName={Platform.OS === "ios" ? "cart" : "md-cart"}
-            onPress={() =>
-              props.navigation.navigate("CartScreen", { title: "Cart" })
-            }
-          />
-        </HeaderButtons>
+        <View style={{ flexDirection: "row" }}>
+          <HeaderButtons HeaderButtonComponent={HeaderButtonComp} color={color}>
+            <Item
+              title="cart"
+              color={color}
+              iconName={Platform.OS === "ios" ? "cart" : "md-cart"}
+              onPress={() =>
+                props.navigation.navigate("CartScreen", { title: "Cart" })
+              }
+            />
+          </HeaderButtons>
+          <HeaderButtons HeaderButtonComponent={SignOutComp}>
+            <Item
+              title="sign-out"
+              color="white"
+              iconName="sign-out"
+              onPress={() => signOut()}
+            />
+          </HeaderButtons>
+        </View>
       ),
+
       headerLeft: () => (
         <HeaderButtons HeaderButtonComponent={HeaderButtonComp}>
           <Item

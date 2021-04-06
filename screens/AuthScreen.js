@@ -1,5 +1,5 @@
 import React, { useState, useCallback } from "react";
-import { useDispatch, useSelector } from "react-redux";
+import { useDispatch } from "react-redux";
 import {
   ScrollView,
   StyleSheet,
@@ -19,8 +19,6 @@ import { constraints } from "../helpers/authValidate";
 import { createUser, signUpWithGoogle, signIn } from "../store/actions/auth";
 
 const AuthScreen = () => {
-  let tokken = useSelector((state) => state.auth.token);
-  console.log(tokken);
   const dispatch = useDispatch();
   const [email, SetEmail] = useState(null);
   const [loading, setLoading] = useState(false);
@@ -39,7 +37,6 @@ const AuthScreen = () => {
     dispatch(signIn(email, password))
       .then((e) => {
         if (e === "Invalid credencial") {
-          console.log(e);
           setSignError("Invalid credencial");
         }
       })
@@ -62,7 +59,9 @@ const AuthScreen = () => {
         }
       })
       .then(setLoading(false))
-      .catch((err) => console.log(err));
+      .catch((err) => {
+        console.log(err);
+      });
   }, [email, password, createUser, loading, error]);
   if (loading) {
     return (

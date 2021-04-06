@@ -1,6 +1,7 @@
 import * as React from "react";
-import { Dimensions } from "react-native";
+import { Dimensions, Button } from "react-native";
 import { createDrawerNavigator } from "@react-navigation/drawer";
+import { createStackNavigator } from "@react-navigation/stack";
 import {
   MainStackNavigation,
   OrdersNavigator,
@@ -9,6 +10,11 @@ import {
 import { Entypo } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import Colors from "../helpers/Colors";
+
+export const RootStack = createStackNavigator();
+
+
+
 
 const Drawer = createDrawerNavigator();
 const dimWidth = Dimensions.width > 768;
