@@ -4,6 +4,7 @@ const initialState = {
   token: null,
   uid: null,
   isGoogle: false,
+  isAdmin: false,
 };
 const AuthReducer = (state = initialState, action) => {
   switch (action.type) {
@@ -18,6 +19,7 @@ const AuthReducer = (state = initialState, action) => {
         token: action.accesToken,
         uid: action.uid,
         isGoogle: action.isGoogle,
+        isAdmin: action.isAdmin,
       };
     case LOG_OUT:
       return initialState;

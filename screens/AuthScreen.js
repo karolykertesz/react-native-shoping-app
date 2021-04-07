@@ -54,9 +54,7 @@ const AuthScreen = () => {
     setError(undefined);
     dispatch(createUser(email, password))
       .then((re) => {
-        if (re["error"]) {
-          setSignError(re["error"]);
-        }
+        setSignError(re);
       })
       .then(setLoading(false))
       .catch((err) => {

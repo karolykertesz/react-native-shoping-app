@@ -1,5 +1,6 @@
 import * as React from "react";
 import { Dimensions, Button } from "react-native";
+import { useSelector } from "react-redux";
 import { createDrawerNavigator } from "@react-navigation/drawer";
 import { createStackNavigator } from "@react-navigation/stack";
 import {
@@ -13,12 +14,10 @@ import Colors from "../helpers/Colors";
 
 export const RootStack = createStackNavigator();
 
-
-
-
 const Drawer = createDrawerNavigator();
 const dimWidth = Dimensions.width > 768;
 const DrawerNavigator = () => {
+  const admin = useSelector((state) => state.auth.isAdmin);
   return (
     <Drawer.Navigator
       overlayColor="#dde3ed"
@@ -61,16 +60,18 @@ const DrawerNavigator = () => {
           ),
         }}
       />
-      <Drawer.Screen
-        name="Admin"
-        options={{
-          drawerLabel: "Admin Home",
-          drawerIcon: () => (
-            <Fontisto name="propeller-4" size={21} color={Colors.primary} />
-          ),
-        }}
-        component={AdminNavigation}
-      />
+      {admin && (
+        <Drawer.Screen
+          name="Admin"
+          options={{
+            drawerLabel: "Admin Home",
+            drawerIcon: () => (
+              <Fontisto name="propeller-4" size={21} color={Colors.primary} />
+            ),
+          }}
+          component={AdminNavigation}
+        />
+      )}
     </Drawer.Navigator>
   );
 };

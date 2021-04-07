@@ -35,11 +35,11 @@ export const createUser = (email, password) => {
           });
         }
         save();
-        return request.data;
+        return "Done";
       }
     } catch (err) {
       if (err) {
-        console.log(err);
+        return err.response.data.error;
       }
     }
   };
@@ -57,14 +57,21 @@ export const signIn = (email, password) => {
         headers: { "Content-Type": "application/json" },
       });
       if (request.status === 200) {
-        const { uid, accessToken } = request.data;
+        const { uid, accessToken, isAdmin } = request.data;
+        console.log(request.data)
         async function save() {
           let token = "token";
           await SecureStore.setItemAsync(
             token,
             JSON.stringify({ uid: uid, accesToken: accessToken })
           );
-          dispatch({ type: LOGIN, uid, accesToken, isGoogle: false });
+          dispatch({
+            type: LOGIN,
+            uid,
+            accesToken: accessToken,
+            isGoogle: false,
+            isAdmin: isAdmin,
+          });
         }
         save();
         return request.data;

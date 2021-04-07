@@ -1,4 +1,4 @@
-import React, { useState} from "react";
+import React, { useState } from "react";
 import { View, StyleSheet, Text, Button, Alert } from "react-native";
 import { useDispatch } from "react-redux";
 import Colors from "../helpers/Colors";
@@ -95,6 +95,7 @@ const OrderItems = ({ total, date, items, navigation, id }) => {
               total={total}
               id={id}
               navigation={navigation}
+              date={date}
             />
           </View>
         </Modal>

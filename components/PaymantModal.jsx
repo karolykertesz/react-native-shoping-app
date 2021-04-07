@@ -1,5 +1,5 @@
 import React, { useState, useCallback, useReducer } from "react";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import { FontAwesome } from "@expo/vector-icons";
 import { Fontisto } from "@expo/vector-icons";
 import { TextInputMask } from "react-native-masked-text";
@@ -56,6 +56,7 @@ const validateReducer = (state, action) => {
 const PaymantModal = ({ total, dismiss, id, navigation }) => {
   const dispatch = useDispatch();
   const nameRef = React.useRef();
+  const uid = useSelector((state) => state.auth.uid);
   let cardRef;
   let date;
   let cvv;
@@ -135,6 +136,7 @@ const PaymantModal = ({ total, dismiss, id, navigation }) => {
           cardYear: year,
           cardCvc: cvv,
           amount: total,
+          uid,
         },
         headers: { "Content-Type": "application/json" },
       });
@@ -152,6 +154,8 @@ const PaymantModal = ({ total, dismiss, id, navigation }) => {
         setCardErrors("");
         navigation.navigate("ThankYouScreen", {
           total,
+          name,
+          uid,
           success: request["data"]["Success"]["description"],
         });
         dispatch(cancelOrder(id));
