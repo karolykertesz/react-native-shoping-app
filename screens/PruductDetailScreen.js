@@ -18,7 +18,7 @@ const ProductDetailScreen = ({ route, navigation }) => {
   const lengOfItems = useSelector(
     (state) => Object.keys(state.cart.items).length
   );
-  console.log(lengOfItems);
+
   const color = lengOfItems > 0 ? "red" : "white";
   const item = useSelector((state) =>
     state.product.Allproducts.find((it) => it.id === id)

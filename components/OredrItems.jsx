@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, Button, Alert } from "react-native";
 import { useDispatch } from "react-redux";
 import Colors from "../helpers/Colors";
@@ -6,17 +6,19 @@ import { TouchableOpacity } from "react-native-gesture-handler";
 import { cancelOrder } from "../store/actions/userOrders";
 import PaymantModal from "./PaymantModal";
 import Modal from "react-native-modal";
-
+import Shipping from "./Shipping";
+import { AntDesign } from "@expo/vector-icons";
 const OrderItems = ({ total, date, items, navigation, id }) => {
+  const [closeS, setColoseS] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
-
+  const [isShipping, setIsShipping] = useState(false);
+ 
   const dismissModal = () => {
     setModalVisible(false);
   };
   const dispatch = useDispatch();
   const canc = () => {
     dispatch(cancelOrder(id));
-    // navigation.goBack();
   };
   const cancelAllOrder = (id) => {
     Alert.alert(
@@ -80,6 +82,17 @@ const OrderItems = ({ total, date, items, navigation, id }) => {
           <Text style={styles.totalText}>$ {total.toFixed(2)}</Text>
         </View>
       )}
+      <View style={styles.shp}>
+        <Text style={styles.sphText}>Add shipping</Text>
+        <TouchableOpacity onPress={() => setIsShipping((prev) => !prev)}>
+          <AntDesign
+            name={!isShipping ? "pluscircle" : "minuscircle"}
+            size={24}
+            color="#4990e6"
+          />
+        </TouchableOpacity>
+      </View>
+      {isShipping && <Shipping closeShipping={() => {}} />}
       <View>
         <Modal
           visible={modalVisible}
@@ -121,7 +134,13 @@ const styles = StyleSheet.create({
     elevation: 5,
     borderRadius: 10,
   },
-
+  shp: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    paddingVertical: 10,
+    alignItems: "center",
+  },
+  sphText: { fontFamily: "merri-regular", fontSize: 16, marginHorizontal: 15 },
   screen: {
     elevation: 5,
     shadowOpacity: 0.2,

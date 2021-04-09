@@ -7,6 +7,7 @@ import App from "../App";
 import AuthReducer from "../store/reducers/auth";
 import ProductReducer from "../store/reducers/products";
 import UserOrders from "../store/reducers/UserOrder";
+import Shipping from "../store/reducers/shipping";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { registerRootComponent } from "expo";
 
@@ -15,6 +16,7 @@ const reducers = combineReducers({
   product: ProductReducer,
   cart: Cart,
   orders: UserOrders,
+  shipping: Shipping,
 });
 
 const store = createStore(

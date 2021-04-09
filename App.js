@@ -4,8 +4,7 @@ import { NavigationContainer } from "@react-navigation/native";
 import { AuthNavigator } from "./navigation/StackNavigation";
 import DrawerNavigator from "./navigation/DrawerNavigation";
 import { OverflowMenuProvider } from "react-navigation-header-buttons";
-// import { createStore, combineReducers, applyMiddleware } from "redux";
-// import { useDispatch } from "react-redux";
+
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
 import * as SecureStore from "expo-secure-store";

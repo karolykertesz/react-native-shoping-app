@@ -57,6 +57,8 @@ const PaymantModal = ({ total, dismiss, id, navigation }) => {
   const dispatch = useDispatch();
   const nameRef = React.useRef();
   const uid = useSelector((state) => state.auth.uid);
+  const email = useSelector((state) => state.auth.email);
+
   let cardRef;
   let date;
   let cvv;
@@ -137,6 +139,7 @@ const PaymantModal = ({ total, dismiss, id, navigation }) => {
           cardCvc: cvv,
           amount: total,
           uid,
+          email,
         },
         headers: { "Content-Type": "application/json" },
       });
@@ -212,12 +215,12 @@ const PaymantModal = ({ total, dismiss, id, navigation }) => {
               value={cardState.inputValues.name}
               returnKeyType="next"
               onSubmitEditing={() => cardRef.getElement().focus()}
-              blurOnSubmit={false}
               autoFocus={true}
               clearButtonMode="unless-editing"
               errorStyle={{ color: "red" }}
               errorMessage={errors["name"] ? errors["name"][0] : ""}
               autoCapitalize="none"
+              blurOnSubmit={false}
             />
 
             <View style={styles.passwordContainer}>

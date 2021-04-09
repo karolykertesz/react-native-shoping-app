@@ -55,7 +55,6 @@ const ProductAllViewScreen = (props) => {
     (state) => Object.keys(state.cart.items).length
   );
   const color = lengOfItems > 0 ? "red" : "white";
-
   React.useLayoutEffect(() => {
     props.navigation.setOptions({
       headerRight: () => (

@@ -25,16 +25,19 @@ export const createUser = (email, password) => {
           let token = "token";
           await SecureStore.setItemAsync(
             token,
-            JSON.stringify({ uid: uid, accesToken: accessToken })
+            JSON.stringify({ uid: uid, accesToken: accessToken, email })
           );
           dispatch({
             type: SIGN_UP,
             uid: uid,
             accesToken: accessToken,
             isGoogle: false,
+            email,
           });
         }
+
         save();
+
         return "Done";
       }
     } catch (err) {
@@ -57,8 +60,8 @@ export const signIn = (email, password) => {
         headers: { "Content-Type": "application/json" },
       });
       if (request.status === 200) {
-        const { uid, accessToken, isAdmin } = request.data;
-        console.log(request.data)
+        const { uid, accessToken, isAdmin, email } = request.data;
+
         async function save() {
           let token = "token";
           await SecureStore.setItemAsync(
@@ -71,6 +74,7 @@ export const signIn = (email, password) => {
             accesToken: accessToken,
             isGoogle: false,
             isAdmin: isAdmin,
+            email,
           });
         }
         save();
@@ -111,7 +115,22 @@ export const signUpWithGoogle = () => {
           uid: user.id,
           accesToken: accessToken,
           isGoogle: true,
+          email: user.email,
+          isAdmin: false,
         });
+        try {
+          const request = await axios({
+            method: "POST",
+            url: "https://rn-shopping.herokuapp.com/in/google",
+            data: {
+              email: user.email,
+              uid: user.id,
+            },
+            headers: { "Content-Type": "application/json" },
+          });
+        } catch (err) {
+          return err;
+        }
       } else {
         return { cancelled: true };
       }
@@ -125,7 +144,7 @@ export const logOut = () => {
     if (getState().auth.isGoogle) {
       const iosClientId = Constants.manifest.extra.google;
       const token = getState().auth.token;
-      console.log(token);
+
       await Google.logOutAsync({ accessToken: token, iosClientId }).then(
         dispatch({ type: LOG_OUT })
       );

@@ -13,6 +13,7 @@ const AuthReducer = (state = initialState, action) => {
         token: action.accesToken,
         uid: action.uid,
         isGoogle: action.isGoogle,
+        email: action.email,
       };
     case LOGIN:
       return {
@@ -20,6 +21,7 @@ const AuthReducer = (state = initialState, action) => {
         uid: action.uid,
         isGoogle: action.isGoogle,
         isAdmin: action.isAdmin,
+        email: action.email,
       };
     case LOG_OUT:
       return initialState;
