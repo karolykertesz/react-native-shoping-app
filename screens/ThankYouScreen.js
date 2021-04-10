@@ -1,12 +1,17 @@
 import React from "react";
-import { View, Text, StyleSheet, ImageBackground } from "react-native";
+import { View, Text, StyleSheet } from "react-native";
 import { Card, Button } from "react-native-elements";
 import Colors from "../helpers/Colors";
 import TextComp from "../components/UI/TextComp";
 import { Ionicons } from "@expo/vector-icons";
+import { useSelector, useDispatch } from "react-redux";
 
 const ThankYouScreen = ({ route }) => {
   const { success, name, uid, total } = route.params;
+  const dispatch = useDispatch();
+  const { city, county, address, zip, state } = useSelector(
+    (state) => state.shipping
+  );
   const tax = 27;
   const paid = (tax * total) / 100 + total;
   return (
@@ -42,6 +47,44 @@ const ThankYouScreen = ({ route }) => {
           <Text style={styles.totalAm}>Amount paid with Tax:</Text>
           <Text style={styles.totalAm}>$ {paid}</Text>
         </TextComp>
+        <Card.Divider />
+        <TextComp>
+          <Text style={{ color: "#2570cc", fontFamily: "merri-bold" }}>
+            Your Shippment details
+          </Text>
+        </TextComp>
+        <Card.Divider />
+
+        <TextComp>
+          <Text style={styles.totalAm}>Country:</Text>
+          <Text style={styles.totalAm}>{county}</Text>
+        </TextComp>
+        <Card.Divider />
+
+        <TextComp>
+          <Text style={styles.totalAm}>City:</Text>
+          <Text style={styles.totalAm}>{city}</Text>
+        </TextComp>
+        <Card.Divider />
+
+        <TextComp>
+          <Text style={styles.totalAm}>State:</Text>
+          <Text style={styles.totalAm}>{state}</Text>
+        </TextComp>
+        <Card.Divider />
+
+        <TextComp>
+          <Text style={styles.totalAm}>Your Home Address:</Text>
+          <Text style={styles.totalAm}>{address}</Text>
+        </TextComp>
+        <Card.Divider />
+
+        <TextComp>
+          <Text style={styles.totalAm}>Zipp Code:</Text>
+          <Text style={styles.totalAm}>{zip}</Text>
+        </TextComp>
+        <Card.Divider />
+
         <Button
           style={{ width: "60%", marginVertical: 5 }}
           icon={

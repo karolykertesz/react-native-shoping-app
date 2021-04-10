@@ -1,18 +1,22 @@
 import React, { useState, useEffect } from "react";
 import { View, StyleSheet, Text, Button, Alert } from "react-native";
-import { useDispatch } from "react-redux";
+import { useDispatch, useSelector } from "react-redux";
 import Colors from "../helpers/Colors";
 import { TouchableOpacity } from "react-native-gesture-handler";
 import { cancelOrder } from "../store/actions/userOrders";
 import PaymantModal from "./PaymantModal";
 import Modal from "react-native-modal";
 import Shipping from "./Shipping";
-import { AntDesign } from "@expo/vector-icons";
+import { AntDesign, FontAwesome } from "@expo/vector-icons";
+import { resetShipping } from "../store/actions/shipping ";
+import IsDone from "./UI/isDone";
+
 const OrderItems = ({ total, date, items, navigation, id }) => {
-  const [closeS, setColoseS] = useState(false);
   const [modalVisible, setModalVisible] = useState(false);
   const [isShipping, setIsShipping] = useState(false);
- 
+  const [updateS, setUpdateS] = useState(false);
+  const shipIde = useSelector((state) => state.shipping.city);
+  const isDone = useSelector((state) => state.shipping.isDone);
   const dismissModal = () => {
     setModalVisible(false);
   };
@@ -34,7 +38,21 @@ const OrderItems = ({ total, date, items, navigation, id }) => {
       ]
     );
   };
-
+  const updateAndReset = () => {
+    setUpdateS(true);
+    dispatch(resetShipping());
+  };
+  const payNow = () => {
+    if (!shipIde) {
+      Alert.alert(
+        "You did't set your shipping details!",
+        "Would you like to do it?",
+        [{ text: "OK", style: "'default" }]
+      );
+    } else {
+      setModalVisible(true);
+    }
+  };
   const [viewItems, setViewItems] = useState(false);
   return (
     <View style={styles.screen}>
@@ -71,7 +89,7 @@ const OrderItems = ({ total, date, items, navigation, id }) => {
             <View style={styles.btnView}>
               <TouchableOpacity
                 style={[styles.btn, { backgroundColor: "#e34d42" }]}
-                onPress={() => setModalVisible(true)}
+                onPress={() => payNow()}
               >
                 <Text style={[styles.totalText, { color: "#fff" }]}>
                   Pay Now
@@ -82,17 +100,28 @@ const OrderItems = ({ total, date, items, navigation, id }) => {
           <Text style={styles.totalText}>$ {total.toFixed(2)}</Text>
         </View>
       )}
-      <View style={styles.shp}>
-        <Text style={styles.sphText}>Add shipping</Text>
-        <TouchableOpacity onPress={() => setIsShipping((prev) => !prev)}>
-          <AntDesign
-            name={!isShipping ? "pluscircle" : "minuscircle"}
-            size={24}
-            color="#4990e6"
-          />
-        </TouchableOpacity>
+
+      {!shipIde ? (
+        <View style={styles.shp}>
+          <Text style={styles.sphText}>Add shipping</Text>
+          <TouchableOpacity onPress={() => setIsShipping((prev) => !prev)}>
+            <AntDesign
+              name={!isShipping ? "pluscircle" : "minuscircle"}
+              size={24}
+              color="#4990e6"
+            />
+          </TouchableOpacity>
+        </View>
+      ) : (
+        <IsDone updateAndReset={updateAndReset} isDone={isDone} />
+      )}
+
+      <View style={{ width: "100%" }}>
+        {isShipping && (
+          <Shipping setIsShipping={setIsShipping} updateS={updateS} />
+        )}
       </View>
-      {isShipping && <Shipping closeShipping={() => {}} />}
+
       <View>
         <Modal
           visible={modalVisible}
@@ -118,6 +147,11 @@ const OrderItems = ({ total, date, items, navigation, id }) => {
 };
 
 const styles = StyleSheet.create({
+  excText: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
+  },
   modalContent: {
     flex: 1,
     marginTop: 0,
@@ -129,10 +163,17 @@ const styles = StyleSheet.create({
       width: 0,
       height: 2,
     },
+
     shadowOpacity: 0.25,
     shadowRadius: 4,
     elevation: 5,
     borderRadius: 10,
+  },
+  sptext: {
+    textAlign: "center",
+    fontFamily: "merri-bold",
+    color: "#4990e6",
+    marginHorizontal: 10,
   },
   shp: {
     flexDirection: "row",

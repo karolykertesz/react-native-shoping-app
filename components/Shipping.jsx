@@ -10,7 +10,7 @@ import {
   ScrollView,
   KeyboardAvoidingView,
 } from "react-native";
-import { Card, Input, Button } from "react-native-elements";
+import { Card, Input, Button, CheckBox } from "react-native-elements";
 import DropDown from "./UI/DropDown";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { MaterialCommunityIcons } from "@expo/vector-icons";
@@ -36,13 +36,15 @@ const ShippREducer = (state, action) => {
   }
 };
 
-const Shipping = () => {
+const Shipping = ({ setIsShipping, updateS }) => {
   const dispatch = useDispatch();
   const [value, setValue] = useState(null);
   const [city, setCity] = useState("");
   const [address, setAdrres] = useState("");
   const [state, setState] = useState("");
   const [zip, setZip] = useState("");
+  const [check, checkChecked] = useState(false);
+  const [changeShipping, setChangeShipping] = useState(false);
   const initialErrors = {
     city: null,
     address: null,
@@ -68,8 +70,9 @@ const Shipping = () => {
       return;
     }
     const country = value === "HU" ? "NOT APPLICABLE" : state;
-    dispatch(addShipping(city, address, zip, value, country));
-  }, [city, address, state, zip, dispatch]);
+    dispatch(addShipping(city, address, zip, value, country, check, updateS));
+    setIsShipping(false);
+  }, [city, address, state, zip, dispatch, check]);
 
   return (
     <KeyboardAvoidingView
@@ -123,7 +126,6 @@ const Shipping = () => {
               leftIcon={
                 <Ionicons name="md-barcode-sharp" size={23} color="#4990e6" />
               }
-              //   style={styles}
               onChangeText={(text) => setZip(text)}
               clearButtonMode="unless-editing"
               errorStyle={{ color: "red" }}
@@ -162,7 +164,12 @@ const Shipping = () => {
                     style={{ paddingHorizontal: 5 }}
                   />
                 }
-                title="Submit"
+                title={!updateS ? "Submit" : "Update"}
+              />
+              <CheckBox
+                title="Save My Shipping"
+                onPress={() => checkChecked((curr) => !curr)}
+                checked={check}
               />
             </View>
           </Card>

@@ -7,6 +7,7 @@ import {
   ActivityIndicator,
   Text,
   TouchableOpacity,
+  Alert,
 } from "react-native";
 import { useSelector, useDispatch } from "react-redux";
 import ListProductItem from "../components/ListProductItem";
@@ -17,15 +18,30 @@ import { fetchFromDb } from "../store/actions/products";
 import { SignOutComp } from "../components/UI/HeaderButton";
 import * as SecureStore from "expo-secure-store";
 import { logOut } from "../store/actions/auth";
+import { logAllOut } from "../store/actions/userOrders";
 
 const ProductAllViewScreen = (props) => {
   const [loading, setLoading] = useState(false);
   const [refresh, setRefresh] = useState(false);
   const [errors, setErrors] = useState(null);
   const [token, setToken] = useState(null);
+  const userOR = useSelector((state) => state.orders.orders.length);
+
   const dispatch = useDispatch();
   const signOut = () => {
-    SecureStore.deleteItemAsync("token").then().then(dispatch(logOut()));
+    if (userOR > 0) {
+      Alert.alert("ALERT", "You have items in your shopping cart!", [
+        { text: "cancel", style: "default" },
+        {
+          text: "Log out",
+          style: "destructive",
+          onPress: () =>
+            SecureStore.deleteItemAsync("token")
+              .then(dispatch(logAllOut()))
+              .then(dispatch(logOut())),
+        },
+      ]);
+    }
   };
 
   const loadingPro = useCallback(async () => {

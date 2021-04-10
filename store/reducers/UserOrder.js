@@ -1,4 +1,8 @@
-import { ADD_USER_ORDER, CANCEL_ORDER } from "../actions/userOrders";
+import {
+  ADD_USER_ORDER,
+  CANCEL_ORDER,
+  LOG_ALL_OUT,
+} from "../actions/userOrders";
 import UserOrdersState from "../../models/userOrders";
 import { Product } from "../../models/productModels";
 const initialState = {
@@ -27,7 +31,8 @@ const UserOrders = (state = initialState, action) => {
         ...state,
         orders: modifiedState,
       };
-
+    case LOG_ALL_OUT:
+      return initialState;
     default:
       return state;
   }

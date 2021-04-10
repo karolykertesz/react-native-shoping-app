@@ -16,6 +16,7 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   ActivityIndicator,
+
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Card } from "react-native-elements";
@@ -56,6 +57,7 @@ const validateReducer = (state, action) => {
 const PaymantModal = ({ total, dismiss, id, navigation }) => {
   const dispatch = useDispatch();
   const nameRef = React.useRef();
+  const shipIde = useSelector((state) => state.shipping.city);
   const uid = useSelector((state) => state.auth.uid);
   const email = useSelector((state) => state.auth.email);
 
@@ -220,6 +222,7 @@ const PaymantModal = ({ total, dismiss, id, navigation }) => {
               errorStyle={{ color: "red" }}
               errorMessage={errors["name"] ? errors["name"][0] : ""}
               autoCapitalize="none"
+              autoCompleteType="off"
               blurOnSubmit={false}
             />
 

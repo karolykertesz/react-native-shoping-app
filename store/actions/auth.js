@@ -6,6 +6,7 @@ import * as SecureStore from "expo-secure-store";
 export const LOGIN = "LOGIN";
 export const SIGN_UP = "SIGN_UP";
 export const LOG_OUT = "LOG_OUT";
+import { ADD_SHIPPING, RESET } from "./shipping ";
 
 export const createUser = (email, password) => {
   return async (dispatch) => {
@@ -60,7 +61,17 @@ export const signIn = (email, password) => {
         headers: { "Content-Type": "application/json" },
       });
       if (request.status === 200) {
-        const { uid, accessToken, isAdmin, email } = request.data;
+        const {
+          uid,
+          accessToken,
+          isAdmin,
+          email,
+          city,
+          country,
+          state,
+          zip,
+          isDone,
+        } = request.data;
 
         async function save() {
           let token = "token";
@@ -77,12 +88,20 @@ export const signIn = (email, password) => {
             email,
           });
         }
+        dispatch({
+          type: ADD_SHIPPING,
+          city,
+          country,
+          state,
+          zip,
+          isDone,
+        });
         save();
         return request.data;
       }
     } catch (err) {
       if (err) {
-        return err["response"]["data"]["msg"];
+        return err.response.data.msg;
       }
     }
   };
@@ -150,5 +169,6 @@ export const logOut = () => {
       );
     }
     dispatch({ type: LOG_OUT });
+    dispatch({ type: RESET });
   };
 };
