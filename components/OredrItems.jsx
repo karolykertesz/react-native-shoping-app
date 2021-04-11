@@ -113,7 +113,13 @@ const OrderItems = ({ total, date, items, navigation, id }) => {
           </TouchableOpacity>
         </View>
       ) : (
-        <IsDone updateAndReset={updateAndReset} isDone={isDone} />
+        <IsDone
+          updateAndReset={updateAndReset}
+          isDone={isDone}
+          setIsShipping={setIsShipping}
+          setUpdateS={setUpdateS}
+          ship={isShipping}
+        />
       )}
 
       <View style={{ width: "100%" }}>

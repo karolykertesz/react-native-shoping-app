@@ -1,5 +1,6 @@
 export const ADD_SHIPPING = "ADD_SHIPPING";
 export const RESET = "RESET";
+export const PID = "PID";
 import axios from "axios";
 export const addShipping = (
   city,
@@ -11,8 +12,7 @@ export const addShipping = (
   updateS
 ) => {
   return async function (dispatch, getState) {
-    console.log(check);
-    if (check === true) {
+    if (check) {
       const uid = getState().auth.uid;
       try {
         const request = await axios({
@@ -43,5 +43,11 @@ export const addShipping = (
 export const resetShipping = () => {
   return {
     type: RESET,
+  };
+};
+
+export const addPId = (p_id) => {
+  return function (dispatch) {
+    dispatch({ type: PID, p_id });
   };
 };

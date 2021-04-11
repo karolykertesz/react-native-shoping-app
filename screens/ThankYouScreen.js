@@ -3,11 +3,13 @@ import { View, Text, StyleSheet } from "react-native";
 import { Card, Button } from "react-native-elements";
 import Colors from "../helpers/Colors";
 import TextComp from "../components/UI/TextComp";
-import { Ionicons } from "@expo/vector-icons";
+import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
 
-const ThankYouScreen = ({ route }) => {
+const ThankYouScreen = ({ route, navigation }) => {
   const { success, name, uid, total } = route.params;
+  const p_id = useSelector((state) => state.shipping.p_id);
+  console.log(navigation);
   const dispatch = useDispatch();
   const { city, county, address, zip, state } = useSelector(
     (state) => state.shipping
@@ -84,19 +86,33 @@ const ThankYouScreen = ({ route }) => {
           <Text style={styles.totalAm}>{zip}</Text>
         </TextComp>
         <Card.Divider />
-
-        <Button
-          style={{ width: "60%", marginVertical: 5 }}
-          icon={
-            <Ionicons
-              name="mail-open-outline"
-              size={24}
-              color="white"
-              onPress={() => {}}
-            />
-          }
-          title="Email My Invoice"
-        />
+        <View style={styles.buttonContainer}>
+          <Button
+            onPress={() => {}}
+            style={{ width: "100%" }}
+            icon={
+              <Ionicons
+                name="mail-open-outline"
+                size={24}
+                color="white"
+                onPress={() => {}}
+              />
+            }
+            title="Email My Invoice"
+          />
+          <Button
+            onPress={() => navigation.popToTop()}
+            style={{ width: "100%", marginVertical: 5 }}
+            icon={
+              <MaterialIcons
+                name="cancel-presentation"
+                size={24}
+                color="white"
+              />
+            }
+            title="Cancel"
+          />
+        </View>
       </Card>
     </View>
   );
@@ -114,6 +130,11 @@ const styles = StyleSheet.create({
     shadowOffset: { width: 0, height: 2.6 },
     shadowRadius: 7,
     elevation: 5, // Android
+  },
+  buttonContainer: {
+    flexDirection: "row",
+    justifyContent: "space-between",
+    alignItems: "center",
   },
   titleStyle: {
     color: "#2570cc",

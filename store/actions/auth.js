@@ -60,6 +60,7 @@ export const signIn = (email, password) => {
         },
         headers: { "Content-Type": "application/json" },
       });
+      console.log(request);
       if (request.status === 200) {
         const {
           uid,
@@ -67,6 +68,7 @@ export const signIn = (email, password) => {
           isAdmin,
           email,
           city,
+          address,
           country,
           state,
           zip,
@@ -93,6 +95,7 @@ export const signIn = (email, password) => {
           city,
           country,
           state,
+          address,
           zip,
           isDone,
         });
@@ -147,7 +150,19 @@ export const signUpWithGoogle = () => {
             },
             headers: { "Content-Type": "application/json" },
           });
+
+          const { city, country, state, zip, address, isDone } = request.data;
+          dispatch({
+            type: ADD_SHIPPING,
+            city,
+            country,
+            address,
+            state,
+            zip,
+            isDone,
+          });
         } catch (err) {
+          console.log(err);
           return err;
         }
       } else {

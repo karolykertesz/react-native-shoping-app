@@ -5,7 +5,6 @@ import { constraints } from "../helpers/shippingValidate";
 import {
   Text,
   StyleSheet,
-  TouchableOpacity,
   View,
   ScrollView,
   KeyboardAvoidingView,
@@ -72,7 +71,7 @@ const Shipping = ({ setIsShipping, updateS }) => {
     const country = value === "HU" ? "NOT APPLICABLE" : state;
     dispatch(addShipping(city, address, zip, value, country, check, updateS));
     setIsShipping(false);
-  }, [city, address, state, zip, dispatch, check]);
+  }, [city, address, state, zip, dispatch, check, updateS]);
 
   return (
     <KeyboardAvoidingView

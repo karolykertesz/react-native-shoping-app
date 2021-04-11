@@ -20,7 +20,6 @@ const loadFont = () => {
 export default function App() {
   const [isready, setReady] = useState(true);
   const token = useSelector((state) => state.auth.token);
-  console.log(useSelector((state) => state.auth));
   if (isready) {
     return (
       <AppLoading

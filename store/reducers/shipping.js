@@ -1,4 +1,4 @@
-import { ADD_SHIPPING, RESET } from "../actions/shipping ";
+import { ADD_SHIPPING, RESET, PID } from "../actions/shipping ";
 
 const initialState = {
   county: null,
@@ -8,6 +8,7 @@ const initialState = {
   zip: null,
   check: false,
   isDone: false,
+  p_id: null,
 };
 const Shipping = (state = initialState, action) => {
   switch (action.type) {
@@ -23,6 +24,11 @@ const Shipping = (state = initialState, action) => {
       };
     case RESET:
       return initialState;
+    case PID:
+      return {
+        ...state,
+        p_id: action.p_id,
+      };
     default:
       return state;
   }

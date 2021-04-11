@@ -26,7 +26,6 @@ const ProductAllViewScreen = (props) => {
   const [errors, setErrors] = useState(null);
   const [token, setToken] = useState(null);
   const userOR = useSelector((state) => state.orders.orders.length);
-
   const dispatch = useDispatch();
   const signOut = () => {
     if (userOR > 0) {
@@ -41,6 +40,10 @@ const ProductAllViewScreen = (props) => {
               .then(dispatch(logOut())),
         },
       ]);
+    } else {
+      SecureStore.deleteItemAsync("token")
+        .then(dispatch(logAllOut()))
+        .then(dispatch(logOut()));
     }
   };
 

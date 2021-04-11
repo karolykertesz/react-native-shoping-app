@@ -16,16 +16,15 @@ import {
   ScrollView,
   TouchableWithoutFeedback,
   ActivityIndicator,
-
 } from "react-native";
 import Icon from "react-native-vector-icons/FontAwesome";
 import { Input, Card } from "react-native-elements";
 const validate = require("validate.js");
 import { constraints } from "../helpers/cardValidate ";
 import Paybutton from "./UI/PayButton";
-import SuccesButton from "./UI/SuccesButton";
-import SuccessButton from "./UI/SuccesButton";
+
 import { cancelOrder } from "../store/actions/userOrders";
+import { addPId } from "../store/actions/shipping ";
 
 const UPDATE_FORM = "UPDATE_FORM";
 const VALIDATE = "VALIDATE";
@@ -147,6 +146,8 @@ const PaymantModal = ({ total, dismiss, id, navigation }) => {
       });
       setDissabled(true);
       if (request.status === 200) {
+     
+        dispatch(addPId(request.data["p_id"]));
         setSucceed(true);
         setLoading(false);
         setError({
@@ -161,12 +162,12 @@ const PaymantModal = ({ total, dismiss, id, navigation }) => {
           total,
           name,
           uid,
-          success: request["data"]["Success"]["description"],
         });
         dispatch(cancelOrder(id));
       }
     } catch (err) {
-      setCardErrors(err["response"]["data"]["errors"][0]["msg"]);
+      setCardErrors(err.response.data.errors[0].msg);
+      setLoading(false);
     }
   }, [
     cardState.inputValues.cardNumber,
@@ -321,11 +322,7 @@ const PaymantModal = ({ total, dismiss, id, navigation }) => {
               onPress={() => setSaveCard(!saveCard)}
             />
 
-            {succeed === false ? (
-              <Paybutton total={total} submitPay={submitPay} />
-            ) : (
-              <SuccessButton cancelOrder={cancelOrder} id={id} />
-            )}
+            <Paybutton total={total} submitPay={submitPay} />
           </Card>
         </View>
       </KeyboardAvoidingView>
