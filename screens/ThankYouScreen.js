@@ -5,15 +5,22 @@ import Colors from "../helpers/Colors";
 import TextComp from "../components/UI/TextComp";
 import { Ionicons, MaterialIcons } from "@expo/vector-icons";
 import { useSelector, useDispatch } from "react-redux";
+import { sendInvice } from "../store/actions/invoice";
 
 const ThankYouScreen = ({ route, navigation }) => {
   const { success, name, uid, total } = route.params;
   const p_id = useSelector((state) => state.shipping.p_id);
-  console.log(navigation);
+
   const dispatch = useDispatch();
+
   const { city, county, address, zip, state } = useSelector(
     (state) => state.shipping
   );
+  const sandInvoice = () => {
+    dispatch(sendInvice(p_id, city, county, address, zip, state)).then(() =>
+      navigation.popToTop()
+    );
+  };
   const tax = 27;
   const paid = (tax * total) / 100 + total;
   return (
@@ -88,16 +95,9 @@ const ThankYouScreen = ({ route, navigation }) => {
         <Card.Divider />
         <View style={styles.buttonContainer}>
           <Button
-            onPress={() => {}}
+            onPress={() => sandInvoice()}
             style={{ width: "100%" }}
-            icon={
-              <Ionicons
-                name="mail-open-outline"
-                size={24}
-                color="white"
-                onPress={() => {}}
-              />
-            }
+            icon={<Ionicons name="mail-open-outline" size={24} color="white" />}
             title="Email My Invoice"
           />
           <Button

@@ -1,4 +1,4 @@
-import React from "react";
+import React, { useEffect, useState } from "react";
 import { Provider } from "react-redux";
 import { createStore, combineReducers, applyMiddleware } from "redux";
 import thunk from "redux-thunk";
@@ -10,6 +10,7 @@ import UserOrders from "../store/reducers/UserOrder";
 import Shipping from "../store/reducers/shipping";
 import { composeWithDevTools } from "redux-devtools-extension";
 import { registerRootComponent } from "expo";
+
 
 const reducers = combineReducers({
   auth: AuthReducer,
@@ -24,6 +25,8 @@ const store = createStore(
   composeWithDevTools(applyMiddleware(thunk))
 );
 export default Appwrapper = () => {
+  const [ttt, setT] = useState(null);
+
   return (
     <Provider store={store}>
       <App />

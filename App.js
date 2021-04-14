@@ -1,4 +1,4 @@
-import React, { useState } from "react";
+import React, { useState, useEffect } from "react";
 import { StyleSheet } from "react-native";
 import { NavigationContainer } from "@react-navigation/native";
 import { AuthNavigator } from "./navigation/StackNavigation";
@@ -7,7 +7,6 @@ import { OverflowMenuProvider } from "react-navigation-header-buttons";
 
 import AppLoading from "expo-app-loading";
 import * as Font from "expo-font";
-import * as SecureStore from "expo-secure-store";
 import { useSelector } from "react-redux";
 import { RootStack } from "./navigation/DrawerNavigation";
 
@@ -20,6 +19,7 @@ const loadFont = () => {
 export default function App() {
   const [isready, setReady] = useState(true);
   const token = useSelector((state) => state.auth.token);
+
   if (isready) {
     return (
       <AppLoading

@@ -146,7 +146,6 @@ const PaymantModal = ({ total, dismiss, id, navigation }) => {
       });
       setDissabled(true);
       if (request.status === 200) {
-     
         dispatch(addPId(request.data["p_id"]));
         setSucceed(true);
         setLoading(false);
@@ -166,7 +165,8 @@ const PaymantModal = ({ total, dismiss, id, navigation }) => {
         dispatch(cancelOrder(id));
       }
     } catch (err) {
-      setCardErrors(err.response.data.errors[0].msg);
+      console.log(err.response.data.errors[0]);
+      setCardErrors(err.response.data.errors[0]);
       setLoading(false);
     }
   }, [

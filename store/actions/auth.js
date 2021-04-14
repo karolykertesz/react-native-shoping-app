@@ -60,7 +60,6 @@ export const signIn = (email, password) => {
         },
         headers: { "Content-Type": "application/json" },
       });
-      console.log(request);
       if (request.status === 200) {
         const {
           uid,
@@ -81,15 +80,16 @@ export const signIn = (email, password) => {
             token,
             JSON.stringify({ uid: uid, accesToken: accessToken })
           );
-          dispatch({
-            type: LOGIN,
-            uid,
-            accesToken: accessToken,
-            isGoogle: false,
-            isAdmin: isAdmin,
-            email,
-          });
         }
+
+        dispatch({
+          type: LOGIN,
+          uid,
+          accesToken: accessToken,
+          isGoogle: false,
+          isAdmin: isAdmin,
+          email,
+        });
         dispatch({
           type: ADD_SHIPPING,
           city,
